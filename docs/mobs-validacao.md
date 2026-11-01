@@ -24,8 +24,11 @@ A wiki (C) foi lida pela API pública da MediaWiki, porque a página normal bloq
 Imagens da wiki lado a lado: [`assassinos-wiki.png`](assassinos-wiki.png). Os arquivos `Assassin (Updated).png`,
 `Yellow Assassin (Updated).png` e `Assasin Ninja.png` foram enviados à wiki em 05/06/2024.
 
-❗ **Conflito em aberto:** o dono do projeto lembra do **Lv 55 como amarelo e do Lv 50 como vermelho**. A
-wiki diz **45 = vermelho, 50 = amarelo, 55 = cinza (Ninja)**. Precisa conferir no jogo.
+✅ **Conferido no jogo pelo dono do projeto (01/11/2026):** 45 = vermelho, 50 = amarelo, 55 = cinza
+(Ninja), igual à wiki. A dúvida inicial era só confusão de memória.
+
+✅ **Validação prática:** no jogo, o Assassin Ninja com adaga de treino em power training leva cerca de
+**1 minuto** pra morrer, o que bate com o tempo médio calculado pelo app.
 
 A vida do Assassin Ninja está diferente na própria wiki: a página do mob diz 160, mas a Monster List diz 180.
 
@@ -49,8 +52,8 @@ então o erro parece ser só no nome do emoji.
 
 ## O que fazer
 
-- [ ] Dono confere no jogo a cor dos 3 assassinos (45, 50, 55).
+- [x] Dono confere no jogo a cor dos 3 assassinos (45, 50, 55).
 - [ ] Conferir no jogo a vida do Assassin Ninja (160 ou 180) e do Djinn (640 ou 680).
 - [ ] Defesa dos mobs: **nenhuma fonte oficial**. A e B concordam, exceto nos Minotaurs 250/275.
-- [ ] Depois da conferência: acrescentar um campo `apelido` (ex.: "Assassino vermelho") no `data/mobs.json`,
-      marcado com a origem da informação.
+- [x] Campo `apelido` + `apelido_origem` no `data/mobs.json`. Assassinos = conferido no jogo; Rat Lv 3
+      (cinza) e Vampire Lv 110 (vermelho) = só pela wiki.

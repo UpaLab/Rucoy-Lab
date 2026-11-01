@@ -120,4 +120,10 @@ class FormulasTest {
         assertEquals("Orthrus" to 400, mob(300.0, 50.0, 300.0))
         assertEquals("Yeti" to 350, mob(200.0, 44.0, 260.0))
     }
+
+    @Test fun assassinosTemCorConferida() {
+        val a = mobs.filter { it.nome.startsWith("Assassin") }.associate { it.level to it.apelido }
+        assertEquals(mapOf(45 to "vermelho", 50 to "amarelo", 55 to "cinza"), a)
+        assertEquals("Assassin (amarelo)", mobs.first { it.level == 50 }.nomeExibido)
+    }
 }

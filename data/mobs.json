@@ -17,7 +17,9 @@
     "indice_fonte": "posição no array da fonte",
     "pulado_no_treino_auto": "a fonte ignora este mob ao sugerir treino auto (TrainFragment.kt:862); motivo não documentado",
     "pulado_no_power_training": "a fonte ignora este mob ao sugerir power training (TrainFragment.kt:1040); motivo não documentado",
-    "nome_original_fonte": "nome exatamente como está na fonte"
+    "nome_original_fonte": "nome exatamente como está na fonte",
+    "apelido": "cor usada pra diferenciar mobs com o mesmo nome (opcional)",
+    "apelido_origem": "de onde veio o apelido: conferido no jogo ou só pela wiki"
   },
   "mobs": [
     {
@@ -38,7 +40,9 @@
       "nome_original_fonte": "Rat Lv.3",
       "indice_fonte": 1,
       "pulado_no_treino_auto": false,
-      "pulado_no_power_training": false
+      "pulado_no_power_training": false,
+      "apelido": "cinza",
+      "apelido_origem": "só pela wiki (rucoy-online.fandom.com), ainda não conferido no jogo"
     },
     {
       "nome": "Crow",
@@ -128,7 +132,9 @@
       "nome_original_fonte": "Assassin Lv.45",
       "indice_fonte": 10,
       "pulado_no_treino_auto": false,
-      "pulado_no_power_training": false
+      "pulado_no_power_training": false,
+      "apelido": "vermelho",
+      "apelido_origem": "conferido no jogo pelo dono do projeto em 01/11/2026 (bate com as imagens da wiki)"
     },
     {
       "nome": "Assassin",
@@ -138,7 +144,9 @@
       "nome_original_fonte": "Assassin Lv.50",
       "indice_fonte": 11,
       "pulado_no_treino_auto": false,
-      "pulado_no_power_training": false
+      "pulado_no_power_training": false,
+      "apelido": "amarelo",
+      "apelido_origem": "conferido no jogo pelo dono do projeto em 01/11/2026 (bate com as imagens da wiki)"
     },
     {
       "nome": "Assassin Ninja",
@@ -148,7 +156,9 @@
       "nome_original_fonte": "Assassin Ninja Lv.55",
       "indice_fonte": 12,
       "pulado_no_treino_auto": false,
-      "pulado_no_power_training": false
+      "pulado_no_power_training": false,
+      "apelido": "cinza",
+      "apelido_origem": "conferido no jogo pelo dono do projeto em 01/11/2026 (bate com as imagens da wiki)"
     },
     {
       "nome": "Skeleton Archer",
@@ -208,7 +218,9 @@
       "nome_original_fonte": "Vampire Lv.110",
       "indice_fonte": 18,
       "pulado_no_treino_auto": false,
-      "pulado_no_power_training": false
+      "pulado_no_power_training": false,
+      "apelido": "vermelho",
+      "apelido_origem": "só pela wiki (rucoy-online.fandom.com), ainda não conferido no jogo"
     },
     {
       "nome": "Drow Ranger",

@@ -128,9 +128,9 @@ private fun CartaoResultado(r: ResultadoTreino, modo: Modo) {
                 Text("Nenhum mob da lista te dá a precisão mínima. Mostrando o mais fraco.", fontWeight = FontWeight.Bold)
             }
             Text("Treine em:", style = MaterialTheme.typography.labelLarge)
-            Text("${r.mob.nome} (Lv ${r.mob.level})", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Text("${r.mob.nomeExibido} (Lv ${r.mob.level})", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             if (r.equivalentes.isNotEmpty()) {
-                Text("Vale igual: " + r.equivalentes.joinToString { "${it.nome} (Lv ${it.level})" })
+                Text("Vale igual: " + r.equivalentes.joinToString { "${it.nomeExibido} (Lv ${it.level})" })
             }
             Linha("Precisão", porcento(r.precisao) + "  (mínimo ${porcento(r.precisaoMinima)})")
             Linha("Ticks por hora", "${milhar(r.ticksPorHora)} / ${milhar(r.tetoTicks)}")
@@ -138,7 +138,7 @@ private fun CartaoResultado(r: ResultadoTreino, modo: Modo) {
             Linha("Tempo médio pra matar", tempo(r.tempoParaMatar))
             r.proximo?.let { p ->
                 Text("")
-                Text("Próximo mob: ${p.mob.nome} (Lv ${p.mob.level})", fontWeight = FontWeight.Bold)
+                Text("Próximo mob: ${p.mob.nomeExibido} (Lv ${p.mob.level})", fontWeight = FontWeight.Bold)
                 Text(
                     when (p.statsFaltando) {
                         null -> "Precisa de mais de 1000 pontos de stat."

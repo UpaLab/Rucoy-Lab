@@ -92,7 +92,7 @@ fun TelaMobs(modifier: Modifier) {
         }
         items(mobs) { m ->
             Row(Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
-                Text(m.nome, Modifier.weight(2f))
+                Text(m.nomeExibido, Modifier.weight(2f))
                 Text("${m.level}", Modifier.weight(1f))
                 Text("${m.defesa}", Modifier.weight(1f))
                 Text("${m.vida}", Modifier.weight(1.2f))

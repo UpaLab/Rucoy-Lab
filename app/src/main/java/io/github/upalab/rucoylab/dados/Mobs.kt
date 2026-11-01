@@ -17,7 +17,12 @@ data class Mob(
     val vida: Int,
     val puladoNoTreinoAuto: Boolean,
     val puladoNoPowerTraining: Boolean,
-)
+    /** Cor pra diferenciar mobs com o mesmo nome (ex.: "vermelho"). */
+    val apelido: String? = null,
+) {
+    /** Nome pra mostrar na tela, com a cor quando existir: "Assassin (vermelho)". */
+    val nomeExibido: String get() = if (apelido != null) "$nome ($apelido)" else nome
+}
 
 object Mobs {
 
@@ -33,6 +38,7 @@ object Mobs {
                 vida = o.getInt("vida"),
                 puladoNoTreinoAuto = o.optBoolean("pulado_no_treino_auto"),
                 puladoNoPowerTraining = o.optBoolean("pulado_no_power_training"),
+                apelido = o.optString("apelido").ifEmpty { null },
             )
         }
     }
