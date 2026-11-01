@@ -1,0 +1,464 @@
+{
+  "_fonte": {
+    "projeto": "helloyanis/rucoy-calculator",
+    "url": "https://github.com/helloyanis/rucoy-calculator",
+    "arquivo": "src/app/src/main/java/com/helloyanis/rucoycalculator/formulas/Formulas.kt",
+    "commit": "f8677bae7253de9abe94670bb6eb9294f91d31be",
+    "ultima_alteracao_do_arquivo": "2025-04-25",
+    "licenca": "GPL-3.0",
+    "creditos": "helloyanis e contribuidores; fórmulas de treino baseadas no trabalho de Mims (github.com/Mimsqueeze/Mims-Rucoy-Calculator)"
+  },
+  "_status": "DADOS DA COMUNIDADE, NÃO OFICIAIS. Precisam de validação in-game. Ordem = ordem da fonte (aprox. por defesa crescente).",
+  "_campos": {
+    "nome": "nome sem o sufixo de level",
+    "level": "level do mob",
+    "defesa": "defesa do mob",
+    "vida": "HP do mob",
+    "indice_fonte": "posição no array da fonte",
+    "pulado_no_treino_auto": "a fonte ignora este mob ao sugerir treino auto (TrainFragment.kt:862); motivo não documentado",
+    "pulado_no_power_training": "a fonte ignora este mob ao sugerir power training (TrainFragment.kt:1040); motivo não documentado",
+    "nome_original_fonte": "nome exatamente como está na fonte"
+  },
+  "mobs": [
+    {
+      "nome": "Rat",
+      "level": 1,
+      "defesa": 4,
+      "vida": 25,
+      "nome_original_fonte": "Rat Lv.1",
+      "indice_fonte": 0,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Rat",
+      "level": 3,
+      "defesa": 7,
+      "vida": 35,
+      "nome_original_fonte": "Rat Lv.3",
+      "indice_fonte": 1,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Crow",
+      "level": 6,
+      "defesa": 13,
+      "vida": 40,
+      "nome_original_fonte": "Crow Lv.6",
+      "indice_fonte": 2,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Wolf",
+      "level": 9,
+      "defesa": 17,
+      "vida": 50,
+      "nome_original_fonte": "Wolf Lv.9",
+      "indice_fonte": 3,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Scorpion",
+      "level": 12,
+      "defesa": 18,
+      "vida": 50,
+      "nome_original_fonte": "Scorpion Lv.12",
+      "indice_fonte": 4,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Cobra",
+      "level": 13,
+      "defesa": 18,
+      "vida": 50,
+      "nome_original_fonte": "Cobra Lv.13",
+      "indice_fonte": 5,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Worm",
+      "level": 14,
+      "defesa": 19,
+      "vida": 55,
+      "nome_original_fonte": "Worm Lv.14",
+      "indice_fonte": 6,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Goblin",
+      "level": 15,
+      "defesa": 21,
+      "vida": 60,
+      "nome_original_fonte": "Goblin Lv.15",
+      "indice_fonte": 7,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Mummy",
+      "level": 25,
+      "defesa": 36,
+      "vida": 80,
+      "nome_original_fonte": "Mummy Lv.25",
+      "indice_fonte": 8,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Pharaoh",
+      "level": 35,
+      "defesa": 51,
+      "vida": 100,
+      "nome_original_fonte": "Pharaoh Lv.35",
+      "indice_fonte": 9,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Assassin",
+      "level": 45,
+      "defesa": 71,
+      "vida": 120,
+      "nome_original_fonte": "Assassin Lv.45",
+      "indice_fonte": 10,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Assassin",
+      "level": 50,
+      "defesa": 81,
+      "vida": 140,
+      "nome_original_fonte": "Assassin Lv.50",
+      "indice_fonte": 11,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Assassin Ninja",
+      "level": 55,
+      "defesa": 91,
+      "vida": 160,
+      "nome_original_fonte": "Assassin Ninja Lv.55",
+      "indice_fonte": 12,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Skeleton Archer",
+      "level": 80,
+      "defesa": 101,
+      "vida": 300,
+      "nome_original_fonte": "Skeleton Archer Lv.80",
+      "indice_fonte": 13,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Zombie",
+      "level": 65,
+      "defesa": 106,
+      "vida": 200,
+      "nome_original_fonte": "Zombie Lv.65",
+      "indice_fonte": 14,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Skeleton",
+      "level": 75,
+      "defesa": 121,
+      "vida": 300,
+      "nome_original_fonte": "Skeleton Lv.75",
+      "indice_fonte": 15,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Skeleton Warrior",
+      "level": 90,
+      "defesa": 146,
+      "vida": 375,
+      "nome_original_fonte": "Skeleton Warrior Lv.90",
+      "indice_fonte": 16,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Vampire",
+      "level": 100,
+      "defesa": 171,
+      "vida": 450,
+      "nome_original_fonte": "Vampire Lv.100",
+      "indice_fonte": 17,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Vampire",
+      "level": 110,
+      "defesa": 186,
+      "vida": 530,
+      "nome_original_fonte": "Vampire Lv.110",
+      "indice_fonte": 18,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Drow Ranger",
+      "level": 125,
+      "defesa": 191,
+      "vida": 600,
+      "nome_original_fonte": "Drow Ranger Lv.125",
+      "indice_fonte": 19,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Drow Mage",
+      "level": 130,
+      "defesa": 191,
+      "vida": 600,
+      "nome_original_fonte": "Drow Mage Lv. 130",
+      "indice_fonte": 20,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Drow Assassin",
+      "level": 120,
+      "defesa": 221,
+      "vida": 620,
+      "nome_original_fonte": "Drow Assassin Lv.120",
+      "indice_fonte": 21,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Drow Sorceress",
+      "level": 140,
+      "defesa": 221,
+      "vida": 600,
+      "nome_original_fonte": "Drow Sorceress Lv.140",
+      "indice_fonte": 22,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Drow Fighter",
+      "level": 135,
+      "defesa": 246,
+      "vida": 680,
+      "nome_original_fonte": "Drow Fighter Lv.135",
+      "indice_fonte": 23,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Lizard Archer",
+      "level": 160,
+      "defesa": 271,
+      "vida": 650,
+      "nome_original_fonte": "Lizard Archer Lv.160",
+      "indice_fonte": 24,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Lizard Shaman",
+      "level": 170,
+      "defesa": 276,
+      "vida": 600,
+      "nome_original_fonte": "Lizard Shaman Lv.170",
+      "indice_fonte": 25,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Dead Eyes",
+      "level": 170,
+      "defesa": 276,
+      "vida": 600,
+      "nome_original_fonte": "Dead Eyes Lv.170",
+      "indice_fonte": 26,
+      "pulado_no_treino_auto": true,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Lizard Warrior",
+      "level": 150,
+      "defesa": 301,
+      "vida": 680,
+      "nome_original_fonte": "Lizard Warrior Lv.150",
+      "indice_fonte": 27,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Djinn",
+      "level": 150,
+      "defesa": 301,
+      "vida": 640,
+      "nome_original_fonte": "Djinn Lv.150",
+      "indice_fonte": 28,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Lizard High Shaman",
+      "level": 190,
+      "defesa": 326,
+      "vida": 740,
+      "nome_original_fonte": "Lizard High Shaman Lv.190",
+      "indice_fonte": 29,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Gargoyle",
+      "level": 190,
+      "defesa": 326,
+      "vida": 740,
+      "nome_original_fonte": "Gargoyle Lv.190",
+      "indice_fonte": 30,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Dragon Hatchling",
+      "level": 240,
+      "defesa": 331,
+      "vida": 10000,
+      "nome_original_fonte": "Dragon Hatchling Lv. 240",
+      "indice_fonte": 31,
+      "pulado_no_treino_auto": true,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Lizard Captain",
+      "level": 180,
+      "defesa": 361,
+      "vida": 815,
+      "nome_original_fonte": "Lizard Captain lv.180",
+      "indice_fonte": 32,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Dragon",
+      "level": 250,
+      "defesa": 501,
+      "vida": 20000,
+      "nome_original_fonte": "Dragon Lv.250",
+      "indice_fonte": 33,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Minotaur",
+      "level": 225,
+      "defesa": 511,
+      "vida": 4250,
+      "nome_original_fonte": "Minotaur Lv.225",
+      "indice_fonte": 34,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Minotaur",
+      "level": 250,
+      "defesa": 601,
+      "vida": 5000,
+      "nome_original_fonte": "Minotaur Lv.250",
+      "indice_fonte": 35,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Dragon Warden",
+      "level": 280,
+      "defesa": 626,
+      "vida": 30000,
+      "nome_original_fonte": "Dragon Warden Lv.280",
+      "indice_fonte": 36,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Ice Elemental",
+      "level": 300,
+      "defesa": 676,
+      "vida": 40000,
+      "nome_original_fonte": "Ice Elemental Lv.300",
+      "indice_fonte": 37,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Minotaur",
+      "level": 275,
+      "defesa": 691,
+      "vida": 5750,
+      "nome_original_fonte": "Minotaur Lv.275",
+      "indice_fonte": 38,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": false
+    },
+    {
+      "nome": "Ice Dragon",
+      "level": 320,
+      "defesa": 726,
+      "vida": 45000,
+      "nome_original_fonte": "Ice Dragon Lv.320",
+      "indice_fonte": 39,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Yeti",
+      "level": 350,
+      "defesa": 826,
+      "vida": 55000,
+      "nome_original_fonte": "Yeti Lv.350",
+      "indice_fonte": 40,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Lava Golem",
+      "level": 375,
+      "defesa": 900,
+      "vida": 65000,
+      "nome_original_fonte": "Lava Golem Lv.375",
+      "indice_fonte": 41,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Orthrus",
+      "level": 400,
+      "defesa": 1300,
+      "vida": 75000,
+      "nome_original_fonte": "Orthrus Lv.400",
+      "indice_fonte": 42,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    },
+    {
+      "nome": "Demon",
+      "level": 450,
+      "defesa": 1550,
+      "vida": 100000,
+      "nome_original_fonte": "Demon Lv.450",
+      "indice_fonte": 43,
+      "pulado_no_treino_auto": false,
+      "pulado_no_power_training": true
+    }
+  ]
+}
