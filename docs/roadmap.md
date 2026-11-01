@@ -44,6 +44,9 @@
   - `helloyanis/rucoy-calculator`: GPL-3.0 (conferido).
   - `Mimsqueeze/Mims-Rucoy-Calculator`: licença **não verificada**.
 - **Pronto quando:** existir `docs/licencas.md`.
+- Nota do dono: existem projetos e até APIs da comunidade no GitHub que podem ser usados. Como o app é
+  offline agora, o uso de APIs fica para as fases com internet (Fase 2 em diante), sempre respeitando a
+  licença de cada uma.
 
 ### #5 Checar robots.txt e termos do site oficial
 - Pré-requisito do tracker (Fase 2).
@@ -71,7 +74,7 @@
 
 ## Fase 1 — App: calculadora
 
-### #10 Calculadora de treino: onde treinar
+### #10 Calculadora de treino: onde treinar ✅ primeira versão
 - Entrada: classe, stat, ataque da arma, level, anel de crítico.
 - Saída: melhor mob, precisão, ticks/h (treino auto e power training).
 

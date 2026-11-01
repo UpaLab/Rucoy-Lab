@@ -62,6 +62,7 @@ fun AppUpaLab() {
             val m = Modifier.padding(espaco)
             when (tela) {
                 Tela.INICIO -> TelaInicio(m) { tela = it }
+                Tela.ONDE_TREINAR -> TelaOndeTreinar(m)
                 Tela.MOBS -> TelaMobs(m)
                 Tela.CREDITOS -> TelaCreditos(m)
                 else -> TelaEmBreve(tela, m)

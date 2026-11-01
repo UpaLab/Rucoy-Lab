@@ -74,10 +74,50 @@ class FormulasTest {
         assertTrue(mobs.count { it.puladoNoTreinoAuto } == 2)
     }
 
-    @Test fun ondeTreinarEscolheMobComPrecisaoMinima() {
-        val mobs = Mobs.deJson(File("../data/mobs.json").readText())
-        val r = Treino.ondeTreinarAuto(mobs, stat = 50.0, atkArma = 20.0, level = 40.0, anelCritico = false)!!
+    private val mobs by lazy { Mobs.deJson(File("../data/mobs.json").readText()) }
+
+    @Test fun ondeTreinarAutoEscolheMobComPrecisaoMinima() {
+        val r = Treino.calcular(mobs, Entrada(Classe.MELEE, 40.0, 50.0, 20.0, false, Modo.AUTO))!!
         assertTrue(r.precisao >= Formulas.PRECISAO_MINIMA_AUTO)
         assertTrue(!r.mob.puladoNoTreinoAuto)
+        assertTrue(!r.nenhumIdeal)
+        // O próximo mob, mais forte, ainda não pode ter a precisão mínima.
+        val p = r.proximo!!
+        assertTrue(p.mob.defesa > r.mob.defesa)
+        assertTrue(p.statsFaltando!! > 0)
+        // Com os stats que faltam, a precisão no próximo mob chega no mínimo (e 1 a menos não chega).
+        val dMais = Formulas.danoAuto(50.0 + p.statsFaltando!!, 20.0, 40.0)
+        val dMenos = Formulas.danoAuto(50.0 + p.statsFaltando!! - 1, 20.0, 40.0)
+        assertTrue(Formulas.precisao(dMais, p.mob.defesa.toDouble(), false) >= 0.1749)
+        assertTrue(Formulas.precisao(dMenos, p.mob.defesa.toDouble(), false) < 0.1749)
+    }
+
+    @Test fun mobsComMesmaDefesaAparecemComoEquivalentes() {
+        // Scorpion e Cobra têm defesa 18 na fonte.
+        val r = Treino.calcular(mobs, Entrada(Classe.MELEE, 10.0, 12.0, 4.0, false, Modo.AUTO))!!
+        if (r.mob.defesa == 18) assertTrue(r.equivalentes.isNotEmpty())
+        r.equivalentes.forEach { assertEquals(r.mob.defesa, it.defesa) }
+    }
+
+    @Test fun powerTrainingUsaEspecialELimiteDosMobs() {
+        val r = Treino.calcular(mobs, Entrada(Classe.DISTANCE, 100.0, 80.0, 30.0, false, Modo.POWER, 3))!!
+        assertEquals(10800.0, r.tetoTicks, 1e-9)
+        assertTrue(r.precisao >= Formulas.precisaoMinimaPower(3))
+        assertTrue(!r.mob.puladoNoPowerTraining)
+    }
+
+    @Test fun entradaInvalidaNaoCalcula() {
+        assertEquals(null, Treino.calcular(mobs, Entrada(Classe.MELEE, 0.0, 50.0, 20.0, false, Modo.AUTO)))
+    }
+
+    /** Valores esperados calculados replicando a lógica da fonte (TrainFragment.train()). */
+    @Test fun mesmoMobQueOAppOriginal() {
+        fun mob(stat: Double, atk: Double, lvl: Double) =
+            Treino.calcular(mobs, Entrada(Classe.MELEE, lvl, stat, atk, false, Modo.AUTO))!!.mob.let { it.nome to it.level }
+        assertEquals("Skeleton Archer" to 80, mob(50.0, 20.0, 40.0))
+        assertEquals("Rat" to 1, mob(10.0, 5.0, 5.0))
+        assertEquals("Lizard Captain" to 180, mob(120.0, 35.0, 150.0))
+        assertEquals("Orthrus" to 400, mob(300.0, 50.0, 300.0))
+        assertEquals("Yeti" to 350, mob(200.0, 44.0, 260.0))
     }
 }
