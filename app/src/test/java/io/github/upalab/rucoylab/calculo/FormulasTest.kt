@@ -111,14 +111,45 @@ class FormulasTest {
 
     // ---- Poções ----
 
-    @Test fun pocoesComoNaIdeiaDoMims() {
-        // 4 mobs, sem bônus: 40.000 ticks → 10.000 especiais → 500.000 de mana → 5.000 poções normais.
-        assertEquals(10000.0, Pocoes.especiais(40000.0, 4, 1.0), d)
-        assertEquals(500000.0, Pocoes.mana(40000.0, 4, 1.0), d)
-        val normal = Pocoes.gasto(40000.0, 4, 1.0).first { it.pocao == Pocao.NORMAL }
-        assertEquals(5000L, normal.quantidade)
-        assertEquals(250000L, normal.gold)
-        assertEquals(5000.0, Pocoes.especiais(40000.0, 4, 2.0), d)
+    @Test fun pocoesComValoresDaWiki() {
+        val basica = TiposPocao.MANA[0]
+        assertEquals(100.0, basica.recuperaMedia, d)       // wiki: 70–130
+        assertEquals(250.0, TiposPocao.MANA[1].recuperaMedia, d) // wiki: 200–300
+        assertEquals(1.25, TiposPocao.MANA[1].cooldownSeg, d)    // notas oficiais 1.22
+        // 4 mobs, sem bônus, 40.000 ticks: 10.000 especiais × 50 = 500.000 de mana → 5.000 básicas.
+        val p = Pocoes.planoMana(40000.0, 14400.0, 4, 1.0, AjusteMana.de(basica))
+        assertEquals(10000.0, p.especiais, d)
+        assertEquals(5000L, p.pocoes)
+        assertEquals(250000L, p.gold)
+    }
+
+    @Test fun regeneracaoDescontaMana() {
+        val a = AjusteMana.de(TiposPocao.MANA[0]).copy(regenPorSegundo = 10.0)
+        // 14.400 ticks a 14.400/h = 1 h → regen 36.000 de mana.
+        val p = Pocoes.planoMana(14400.0, 14400.0, 4, 1.0, a)
+        assertEquals(36000.0, p.manaDaRegeneracao, d)
+        assertEquals(((3600 * 50.0 - 36000) / 100).toLong(), p.pocoes)
+    }
+
+    @Test fun cooldownLimitaORitmo() {
+        // 1 mob a 3.600 ticks/h = 1 especial por segundo = 50 mana/s; básica dá 100 a cada 1 s → aguenta.
+        val ok = Pocoes.planoMana(3600.0, 3600.0, 1, 1.0, AjusteMana.de(TiposPocao.MANA[0]))
+        assertTrue(!ok.limitadoPeloCooldown)
+        // Especial custando 300 → precisa de 3 poções/s, mas o cooldown deixa 1/s → limitado.
+        val caro = Pocoes.planoMana(3600.0, 3600.0, 1, 1.0, AjusteMana.de(TiposPocao.MANA[0]).copy(manaPorEspecial = 300.0))
+        assertTrue(caro.limitadoPeloCooldown)
+        assertEquals(3.0, caro.horasReais, 1e-6)  // 100 mana/s ÷ 300 = 1/3 especial por segundo
+    }
+
+    @Test fun ticksPorEspecialParaEmCincoMobs() {
+        assertEquals(5.0, Pocoes.ticksPorEspecial(8, 1.0), d)
+        assertEquals(8.0, Pocoes.ticksPorEspecial(4, 2.0), d)
+    }
+
+    @Test fun vidaPorMinuto() {
+        val v = Pocoes.planoVida(300.0, 0.5, 100.0, 50.0, 1.0) // 30 min × 300 = 9.000 de vida
+        assertEquals(90L, v.pocoes)
+        assertEquals(4500L, v.gold)
     }
 
     // ---- Treino ----

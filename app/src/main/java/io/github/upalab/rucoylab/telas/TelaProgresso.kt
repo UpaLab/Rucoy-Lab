@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import io.github.upalab.rucoylab.calculo.Pocoes
 import io.github.upalab.rucoylab.calculo.Progressao
 import io.github.upalab.rucoylab.calculo.Ticks
 
@@ -112,21 +111,8 @@ fun TelaProgresso(modifier: Modifier) {
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
-                if (ritmo == Ritmo.POWER) {
-                    HorizontalDivider()
-                    Text("Poções de mana (estimativa)", fontWeight = FontWeight.Bold)
-                    val mana = Pocoes.mana(ticks, mobs, bonus)
-                    Text("≈ ${milhar(Pocoes.especiais(ticks, mobs, bonus))} especiais · ${milhar(mana)} de mana")
-                    Pocoes.gasto(ticks, mobs, bonus).forEach { g ->
-                        Linha(g.pocao.nome, "${milhar(g.quantidade.toDouble())} · ${milhar(g.gold.toDouble())} gold")
-                    }
-                    Text(
-                        "🔶 Hipóteses a confirmar: especial gasta 50 de mana; poções recuperam 100/250/500/750 " +
-                            "e custam 50/150/350/650 gold. Ideia do /stat do Mims' Rucoy Calculator.",
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
             }
+            if (ritmo == Ritmo.POWER) PainelPocoes(ticks, porHora, mobs, bonus)
         }
 
         HorizontalDivider()

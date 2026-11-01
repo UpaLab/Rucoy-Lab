@@ -12,6 +12,11 @@
 |---|---|---|
 | Cores dos assassinos | Lv 45 vermelho, Lv 50 amarelo, Lv 55 cinza (Ninja) | dono do projeto, 01/11/2026 |
 | Tempo pra matar o Assassin Ninja (adaga de treino, power training) | ~1 minuto, igual ao calculado | dono do projeto, 01/11/2026 |
+| Mana gasta pelo especial | **50** | medido pelo dono, 01/11/2026 |
+| Quanto a poção recupera | **varia** dentro de uma faixa. Básica 70–130 e Greater 200–300 (wiki); as medições do dono (+117, +82 na básica; 200 na Greater) caem dentro dessas faixas | wiki + dono, 01/11/2026 |
+| Cooldown da Greater e da Super | **1,25 s** e **1,65 s** (mudou na versão 1.22; antes era 1,5 s e 2,0 s) | notas oficiais em rucoyonline.com/news |
+| Preço das poções | 50 / 150 / 350 / 650 gold (básica / Greater / Super / Ultimate) | wiki (Supplies Merchant) |
+| Tomar a poção básica no ritmo do cooldown mantém os especiais | sim | observação do dono; bate com a conta (100 de mana por segundo > 50 por segundo do especial) |
 
 ---
 
@@ -45,26 +50,50 @@
   Minotaur e o maior que tira num mob de defesa conhecida, com o mesmo personagem; a diferença entre os
   dois é a diferença de defesa.
 
-## 4. Mana gasta pelo especial
+## 4. Poções: o que ainda falta
 
-- **Dúvida:** quanto de mana custa um especial? É igual pra todas as classes?
-- **Hipótese do Mims (usada no app):** **50 de mana** por especial.
-- **Como testar:** anote a mana antes e depois de **um** especial. Repita com outra classe, se puder.
+Valores que o app usa hoje (todos editáveis na tela):
 
-## 5. Quanto cada poção de mana recupera (e quanto custa)
+| Poção | Recupera | Preço | Cooldown | Fonte |
+|---|---|---|---|---|
+| Mana / Health Potion | 70–130 (média 100) | 50 | **1 s** | wiki; cooldown: wiki francesa |
+| Greater | 200–300 (média 250) | 150 | 1,25 s | wiki; cooldown: notas oficiais |
+| Super | 400–600 (média 500) | 350 | 1,65 s | wiki; cooldown: notas oficiais |
+| Ultimate | 600–900 (média 750) | 650 | 2 s | wiki francesa; preço: wiki |
 
-- **Dúvida:** quanta mana cada poção recupera, e o preço na loja.
-- **Hipótese do Mims (usada no app):**
+Em aberto:
 
-| Poção | Recupera | Preço |
-|---|---|---|
-| Mana Potion | 100 | 50 gold |
-| Greater Mana Potion | 250 | 150 gold |
-| Super Mana Potion | 500 | 350 gold |
-| Ultimate Mana Potion | 750 | 650 gold |
+- **Cooldown da poção básica:** a wiki francesa diz **1 s**; o dono lembra de **~1,5 s** (que era o cooldown
+  antigo da Greater). **Como testar:** tomar 10 poções básicas seguidas o mais rápido possível e cronometrar.
+- **Poção de vida e de mana dividem o mesmo cooldown?** Se dividirem, no power training você toma menos
+  poções de mana quando precisa curar. **Como testar:** tomar uma de vida e, logo em seguida, uma de mana.
+- **Regeneração natural de mana:** a wiki diz que o Soul Ring e o Soul Pendant dão **+1** cada e que "os
+  dois juntos fazem recuperar o dobro", o que sugere uma base de **2**, mas **não diz por quanto tempo**.
+  O app usa **0** até termos o valor. **Como testar:** com a mana abaixo do máximo, sem atacar e sem poção,
+  anotar a mana a cada 10 segundos durante 1 minuto. Repetir com o anel, se tiver.
+- **Ultimate:** quanto recupera (600–900 só aparece na wiki francesa) e o cooldown de 2 s.
 
-- **Como testar:** com a mana baixa, tome **uma** poção de cada tipo e veja quanto subiu. O preço aparece
-  na loja do NPC.
+## 5. Poção de vida por mob (dano dos mobs)
+
+- **Dúvida:** quanto cada mob tira de vida. **Nenhuma fonte tem o ataque dos mobs** (wiki, helloyanis e Mims).
+- **O app pede:** "vida que você perde por minuto nesse mob", e salva o valor pra cada mob.
+- **Como medir:** no mob em que você treina, com o seu set de sempre e o mesmo número de mobs, anote a
+  vida, treine **1 minuto sem tomar poção de vida** (ou conte quantas tomou e quanto recupera cada uma) e
+  veja quanto perdeu. Mande junto: mob, quantos mobs batiam em você, sua classe, level, defense e
+  armadura.
+
+## 5b. Quantos ticks rende cada especial
+
+A estimativa de poções depende disso mais do que de qualquer outra coisa.
+
+- **Hipótese atual (do Mims):** cada especial rende **1 tick por mob atingido**, até 5, vezes o bônus de exp.
+  Então, com 4 mobs, cada poção básica (≈ 2 especiais) rende ≈ 8 ticks.
+- **Dúvidas:**
+  - O archer acerta **no máximo 3 mobs** no especial (wiki). Isso limita os ticks do archer a 3 por especial?
+  - Os golpes normais entre um especial e outro também dão ticks? Se sim, gasta menos poção por tick.
+  - O bônus de exp multiplica os ticks do especial?
+- **Como testar:** anotar o **stat (com a porcentagem)** antes e depois de **100 especiais** contados, com o
+  número de mobs atingidos. Assim dá pra calcular quantos ticks cada especial rendeu.
 
 ## 6. Outros pontos em aberto (menor prioridade)
 
