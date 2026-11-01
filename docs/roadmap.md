@@ -52,6 +52,9 @@
 ### #5 Checar robots.txt e termos do site oficial
 - Pré-requisito do tracker (Fase 2).
 
+### #6a Comparar helloyanis × Mims ✅
+- Ver `docs/comparacao-formulas.md`.
+
 ### #6 Validar as inconsistências das fórmulas
 - Ver `docs/formulas.md` → "Pendências de validação".
 
