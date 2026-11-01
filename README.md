@@ -28,6 +28,7 @@ público**: o APK de teste vai ser gerado automaticamente pelo GitHub, mas não 
 | [`data/mobs.json`](data/mobs.json) | Tabela de mobs (nome, level, defesa, vida) |
 | [`docs/tracker.md`](docs/tracker.md) | O que sabemos do site oficial e o plano do tracker |
 | [`docs/app.md`](docs/app.md) | Estrutura proposta do app Android, chave de assinatura, verificação da Google |
+| [`docs/ecossistema.md`](docs/ecossistema.md) | Outras ferramentas da comunidade e como o UpaLab se relaciona com elas |
 | [`docs/roadmap.md`](docs/roadmap.md) | Decisões tomadas e rascunho das issues por fase |
 
 ## APK de teste (só pra quem tem acesso)
@@ -49,8 +50,9 @@ O **código é próprio do UpaLab**, escrito a partir de [`docs/formulas.md`](do
 - **Fase 1 (app):** onde treinar, ticks/h, tempo até o próximo nível, custo de poções (auto × power
   training), defesa com set de armadura, balão flutuante (você digita os dados, sem leitura de tela),
   tela de créditos.
-- **Fase 2:** backend (Next.js + Vercel + Postgres/Neon) pro histórico de level e o ranking semanal, bot
-  de Discord, aba de criadores.
+- **Fase 2:** backend (Next.js + Vercel + Postgres/Neon) pro histórico de level e o ranking semanal, aba
+  de criadores. (Bot de Discord não: vamos usar o Mims' Rucoy Calculator, ver
+  [`docs/ecossistema.md`](docs/ecossistema.md).)
 - **Fase 3:** distribuição pública (só quando liberado). Leitura de tela só se as regras do jogo
   permitirem.
 

@@ -85,6 +85,10 @@ Não dá pra ler as skills de outros jogadores pelo perfil público.
 
 ## 4. Regras de coleta (scraping leve)
 
+> Nota (01/11/2026): o Guild Monitor do Mims' Rucoy Calculator consulta o site a cada 30 minutos. Isso é um
+> **precedente da comunidade, não uma autorização oficial**. O UpaLab mantém a consulta leve abaixo. Ver
+> `docs/ecossistema.md`.
+
 - Somente páginas **públicas**. Nunca usar login, conta ou sessão de ninguém.
 - Requisições **sob demanda** (quando alguém busca um personagem) ou **poucas vezes ao dia** pelo cron.
 - **Cache obrigatório**: o mesmo perfil não é buscado de novo dentro de um intervalo mínimo (proposta:

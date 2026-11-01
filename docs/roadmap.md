@@ -21,6 +21,7 @@
 | Assinatura do APK | Chave guardada como **segredo do GitHub**, nunca no código, com cópia de segurança fora do GitHub | 2026-11 |
 | Backend (Fase 2) | **Next.js + Vercel Cron + Postgres (Neon), em TypeScript**. Só pro histórico de level e o ranking semanal. **Não mexer agora.** | 2026-11 |
 | Login | Fica pra depois | 2026-11 |
+| Bot de Discord | **Não criar.** Convidar o Mims' Rucoy Calculator no servidor do UpaLab, com crédito (ver `docs/ecossistema.md`) | 2026-11 |
 | Leitura de tela (OCR) | Fora até confirmar que as regras do jogo permitem | 2026-11 |
 
 ---
@@ -127,8 +128,9 @@
 ### #20 Ranking semanal ("quem mais subiu na semana")
 - Usa as fotos diárias.
 
-### #21 Bot de Discord de cálculo
-- Só cálculo, usando a mesma lógica do app. Não interage com o jogo.
+### ~~#21 Bot de Discord de cálculo~~ ❌ removido
+- Decisão do dono (01/11/2026): o UpaLab **não** vai criar bot de Discord. No servidor do UpaLab vamos
+  **convidar o Mims' Rucoy Calculator**, com crédito. Ver `docs/ecossistema.md`.
 
 ### #22 Aba de criadores de conteúdo
 - Lista curada de canais e guias BR, com autorização dos criadores.
