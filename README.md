@@ -30,6 +30,16 @@ público**: o APK de teste vai ser gerado automaticamente pelo GitHub, mas não 
 | [`docs/app.md`](docs/app.md) | Estrutura proposta do app Android, chave de assinatura, verificação da Google |
 | [`docs/roadmap.md`](docs/roadmap.md) | Decisões tomadas e rascunho das issues por fase |
 
+## APK de teste (só pra quem tem acesso)
+
+O GitHub gera o APK sozinho a cada mudança. Pra baixar pelo celular: aba **Actions** → execução mais
+recente de **"APK de teste"** → **Artifacts** → `UpaLab-APK-...`. Vem um `.zip` com o APK dentro. Não
+existe Release pública.
+
+O código do app está em [`app/`](app/). As fórmulas ficam em
+[`app/src/main/java/io/github/upalab/rucoylab/calculo/`](app/src/main/java/io/github/upalab/rucoylab/calculo/),
+adaptadas do helloyanis/rucoy-calculator (o crédito está no topo de cada arquivo).
+
 ## Roadmap resumido
 
 - **Fase 0:** estrutura, documentação, tabela de mobs, licenças, esqueleto do app e geração automática do

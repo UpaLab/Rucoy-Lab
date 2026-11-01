@@ -1,0 +1,79 @@
+# Gera o APK de TESTE automaticamente.
+# - Roda os testes das fórmulas.
+# - Com os segredos da chave cadastrados: gera o APK de release ASSINADO.
+#   Sem os segredos: gera só o APK de debug (serve pra testar, mas não atualiza por cima do assinado).
+# - O APK fica como ARTEFATO (só quem está logado no GitHub baixa; apagado após 30 dias).
+# - NÃO cria Release pública.
+name: APK de teste
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Testes das fórmulas
+        run: ./gradlew --no-daemon testDebugUnitTest
+
+      - name: Preparar a chave de assinatura (se cadastrada)
+        id: chave
+        env:
+          SIGNING_KEY_BASE64: ${{ secrets.SIGNING_KEY_BASE64 }}
+        run: |
+          if [ -n "$SIGNING_KEY_BASE64" ]; then
+            echo "$SIGNING_KEY_BASE64" | base64 --decode > "$RUNNER_TEMP/upalab-release.jks"
+            echo "caminho=$RUNNER_TEMP/upalab-release.jks" >> "$GITHUB_OUTPUT"
+            echo "Chave encontrada: gerando APK assinado."
+          else
+            echo "Segredos da chave não cadastrados: gerando só o APK de debug."
+          fi
+
+      - name: Gerar APK assinado (release)
+        if: steps.chave.outputs.caminho != ''
+        env:
+          SIGNING_KEY_PATH: ${{ steps.chave.outputs.caminho }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        run: |
+          ./gradlew --no-daemon assembleRelease
+          mkdir -p saida
+          cp app/build/outputs/apk/release/app-release.apk "saida/UpaLab-teste-${{ github.run_number }}.apk"
+
+      - name: Gerar APK de debug (sem chave)
+        if: steps.chave.outputs.caminho == ''
+        run: |
+          ./gradlew --no-daemon assembleDebug
+          mkdir -p saida
+          cp app/build/outputs/apk/debug/app-debug.apk "saida/UpaLab-debug-${{ github.run_number }}.apk"
+
+      - name: Apagar a chave do disco
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upalab-release.jks"
+
+      - name: Guardar o APK como artefato (arquivo de teste)
+        uses: actions/upload-artifact@v4
+        with:
+          name: UpaLab-APK-${{ github.run_number }}
+          path: saida/*.apk
+          retention-days: 30
+          if-no-files-found: error
