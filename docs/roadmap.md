@@ -42,7 +42,8 @@
   é compatível com GPL-3.0?).
 - Já conhecidas:
   - `helloyanis/rucoy-calculator`: GPL-3.0 (conferido).
-  - `Mimsqueeze/Mims-Rucoy-Calculator`: licença **não verificada**.
+  - `Mimsqueeze/Mims-Rucoy-Calculator`: **MIT** (conferido em 01/11/2026). Permite copiar e adaptar,
+    mantendo o aviso de copyright. É compatível com GPL-3.0.
 - **Pronto quando:** existir `docs/licencas.md`.
 - Nota do dono: existem projetos e até APIs da comunidade no GitHub que podem ser usados. Como o app é
   offline agora, o uso de APIs fica para as fases com internet (Fase 2 em diante), sempre respeitando a

@@ -96,7 +96,8 @@ Não dá pra ler as skills de outros jogadores pelo perfil público.
 
 ## 5. ⏳ Pendente antes de implementar
 
-- [ ] Ler o `robots.txt` de `rucoyonline.com` e registrar aqui o que ele permite.
+- [x] `robots.txt` de `rucoyonline.com` (lido em 01/11/2026): só tem comentários, **nenhuma regra ativa**.
+      Ou seja, não bloqueia robôs. Isso **não** substitui ler os termos de uso.
 - [ ] Ler os termos de uso / políticas do site e do jogo, e registrar aqui o que dizem sobre acesso
       automatizado.
 - [ ] Confirmar os padrões de URL do perfil e dos highscores.
