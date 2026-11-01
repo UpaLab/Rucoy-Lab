@@ -80,7 +80,7 @@ fun TelaMobs(modifier: Modifier) {
     val mobs = remember { Mobs.carregar(contexto).sortedBy { it.level } }
     LazyColumn(modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
         item {
-            Aviso("Dados da comunidade, não oficiais (fonte: helloyanis/rucoy-calculator, abr/2025). Precisam de validação.")
+            Aviso("Dados da comunidade, não oficiais (fonte: helloyanis/rucoy-calculator, abr/2025; cores conferidas no jogo). Precisam de validação.")
             Spacer(Modifier.height(12.dp))
             Row(Modifier.fillMaxWidth()) {
                 Text("Mob", Modifier.weight(2f), fontWeight = FontWeight.Bold)
@@ -113,11 +113,17 @@ fun TelaCreditos(modifier: Modifier) {
                 "nenhuma ação dentro do jogo: você digita os dados e o app só calcula.",
         )
         Text("Créditos", style = MaterialTheme.typography.titleMedium)
+        Text("O código do UpaLab é próprio. As fórmulas e os dados vêm da comunidade:")
         Text(
-            "• helloyanis/rucoy-calculator (GPL-3.0) — fórmulas e tabela de mobs, adaptadas neste app.\n" +
+            "• Minsi Hu (\"mims\") — autor do Mims' Rucoy Calculator, base das fórmulas de treino, " +
+                "do cálculo de stat/offline e da ideia de estimar poções.\n" +
+                "  github.com/Mimsqueeze/Mims-Rucoy-Calculator",
+        )
+        Text("• hikari.ascii — organizador da comunidade e mantenedor do Mims' Rucoy Calculator - Backup.")
+        Text(
+            "• helloyanis — rucoy-calculator: tabela de mobs, fórmulas de defesa e ajustes recentes.\n" +
                 "  github.com/helloyanis/rucoy-calculator",
         )
-        Text("• Mims — fórmulas de treino.\n  github.com/Mimsqueeze/Mims-Rucoy-Calculator")
         Text("• A comunidade de jogadores, que descobriu e testou essas fórmulas.")
         Text("Fórmulas da comunidade, não oficiais. Podem estar erradas ou desatualizadas.")
         Text("Licença", style = MaterialTheme.typography.titleMedium)

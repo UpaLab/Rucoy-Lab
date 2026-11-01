@@ -16,7 +16,7 @@
 | Produto principal | **App Android nativo (APK)**, em Kotlin + Jetpack Compose | 2026-11 |
 | Identificador do app | `io.github.upalab.rucoylab` (**não pode mudar depois**; ver `docs/app.md`) | 2026-11 |
 | Cálculos | Rodam **dentro do app**, funcionando sem internet, com as fórmulas de `docs/formulas.md` | 2026-11 |
-| Base de código | Pode adaptar [helloyanis/rucoy-calculator](https://github.com/helloyanis/rucoy-calculator) (GPL-3.0), com crédito no README, na tela de Créditos e nos arquivos adaptados | 2026-11 |
+| Base de código | **Código próprio**, sem copiar nem adaptar código de ninguém. Fórmulas e dados vêm da comunidade, com crédito (helloyanis, Minsi Hu, hikari.ascii) | 2026-11 |
 | Geração do APK | Automática pelo **GitHub Actions**; o APK fica só como **arquivo de teste (artefato)**, sem Release pública | 2026-11 |
 | Assinatura do APK | Chave guardada como **segredo do GitHub**, nunca no código, com cópia de segurança fora do GitHub | 2026-11 |
 | Backend (Fase 2) | **Next.js + Vercel Cron + Postgres (Neon), em TypeScript**. Só pro histórico de level e o ranking semanal. **Não mexer agora.** | 2026-11 |
@@ -82,10 +82,10 @@
 - Entrada: classe, stat, ataque da arma, level, anel de crítico.
 - Saída: melhor mob, precisão, ticks/h (treino auto e power training).
 
-### #11 Ticks/h e tempo até o próximo stat
+### #11 Ticks/h e tempo até o próximo stat ✅ primeira versão (tela Progresso)
 - Avisar sobre a descontinuidade no stat 54 → 55 até ela ser validada.
 
-### #12 Tempo até o próximo level
+### #12 Tempo até o próximo level ✅ primeira versão (tela Progresso)
 - Usa `exp(level)`, depois de validar o que ela representa.
 
 ### #13 Diferencial: custo em gold de poções (MP/HP), auto × power training

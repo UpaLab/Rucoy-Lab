@@ -6,7 +6,7 @@
     "commit": "f8677bae7253de9abe94670bb6eb9294f91d31be",
     "ultima_alteracao_do_arquivo": "2025-04-25",
     "licenca": "GPL-3.0",
-    "creditos": "helloyanis e contribuidores; fórmulas de treino baseadas no trabalho de Mims (github.com/Mimsqueeze/Mims-Rucoy-Calculator)"
+    "creditos": "Tabela extraída de helloyanis/rucoy-calculator (GPL-3.0). Conferências com a wiki Rucoy Online (Fandom) e com o Mims' Rucoy Calculator de Minsi Hu (MIT). Ver docs/mobs-validacao.md."
   },
   "_status": "DADOS DA COMUNIDADE, NÃO OFICIAIS. Precisam de validação in-game. Ordem = ordem da fonte (aprox. por defesa crescente).",
   "_campos": {

@@ -182,3 +182,56 @@ aprovar.
 - [ ] Validar a estimativa de **poções** do M (custo do especial e mana de cada poção).
 - [ ] Acrescentar `LICENSES/MIT-Mims.txt` e o aviso MIT nos arquivos adaptados (próxima mudança no app).
 - [ ] Corrigir as armas "Golden 56+4" e "58+5" quando montarmos a lista de armas.
+
+---
+
+## 6. Reescrita do código (decisão do dono, 01/11/2026)
+
+O dono do projeto decidiu **não copiar nem adaptar código de ninguém**. O cálculo foi reescrito do zero
+(`app/src/main/java/io/github/upalab/rucoylab/calculo/`), usando como guia só este documento e o
+`docs/formulas.md`. Das fontes vêm apenas as **fórmulas** e os **dados** (tabela de mobs), com crédito.
+
+Para ser transparente: quem reescreveu (o assistente) já tinha lido o código das duas fontes durante a
+comparação. A reescrita tem organização, nomes e estrutura próprios, mas não é um "clean room" formal
+(quando uma pessoa reescreve sem nunca ter visto o original).
+
+### O que mudou de propósito em relação às fontes
+
+| Ponto | Fontes | Reescrita | Efeito |
+|---|---|---|---|
+| Chance de acertar | podia dar **negativa** | limitada entre 0 e 100% | Nenhum na escolha do mob (conferido em 600 fichas) |
+| Ataque normal × power | duas contas separadas | **uma conta só** ("power com 1 mob" = normal) | Mesmo resultado |
+| Ticks entre stats | subtrai os totais das curvas: **50 → 60 dá −3.810** | soma **ponto a ponto**; do 54 em diante usa a curva alta | Igual às fontes dentro de cada faixa; nunca negativo |
+| Offline | helloyanis errava abaixo do 55 | curva certa em todas as faixas (como o Mims) | Corrige o erro |
+| Anel de crítico | pesos que não combinam (7,5% × 3,5%) | **um** peso só, 3,5%, marcado como **experimental** | Muda só quem liga o anel |
+| Mago | 1,08 (H) × 1,05 (M) | 1,08, marcado como **a confirmar** | — |
+| Stats que faltam pro próximo mob | helloyanis/Mims somam 1 a mais | número exato | — |
+| Buffs | só o Mims tinha em /train | campo "Buffs" na Onde treinar | — |
+
+**Conferência:** 600 fichas aleatórias (as 3 classes, ataque normal e power training de 1 a 5 mobs, sem
+anel) escolhem **exatamente o mesmo mob** que a regra das fontes (teste `seiscentasFichasIguaisAsFontes`).
+
+### O aviso de licença do código ainda é necessário?
+
+**Resposta curta: o aviso de licença do código (o texto MIT do Mims ou o aviso GPL do helloyanis) deixa de
+ser obrigatório. Fica o crédito pelas fórmulas e pelos dados, que vamos manter de qualquer jeito.**
+
+Por quê, em linguagem simples:
+
+- Licenças como MIT e GPL protegem o **código**, ou seja, o jeito como o programa foi escrito. Elas não
+  protegem **ideias, fórmulas matemáticas nem fatos**, como "o dano máximo é stat × arma ÷ 10 + level ÷ 4"
+  ou "o Yeti tem 55.000 de vida".
+- Como não sobrou nenhum trecho de código copiado ou adaptado, não há código das fontes para levar o
+  aviso junto.
+- O **crédito** continua (README e tela de Créditos), porque é o certo: foram eles que descobriram e
+  organizaram tudo isso. Também deixa claro de onde vêm os números, caso alguém precise conferir.
+
+Cuidados que continuam valendo:
+
+- A **tabela de mobs** (`data/mobs.json`) foi extraída do helloyanis. Números de mob são fatos, mas uma
+  **coleção organizada** de dados pode ter alguma proteção em alguns países (por exemplo, o "direito de
+  base de dados" na União Europeia). Como o UpaLab também é GPL-3.0, igual ao helloyanis, **não existe
+  conflito** mesmo nesse caso. Deixamos registrado no `data/mobs.json` de onde veio cada dado.
+- Se no futuro **copiarmos código** de qualquer um dos dois (por exemplo, para o bot de Discord), o aviso
+  da licença volta a ser obrigatório naquele arquivo.
+- Isso não é uma consultoria jurídica. Se o app virar algo comercial, vale confirmar com um especialista.

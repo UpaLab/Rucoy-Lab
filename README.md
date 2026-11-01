@@ -37,8 +37,10 @@ recente de **"APK de teste"** → **Artifacts** → `UpaLab-APK-...`. Vem um `.z
 existe Release pública.
 
 O código do app está em [`app/`](app/). As fórmulas ficam em
-[`app/src/main/java/io/github/upalab/rucoylab/calculo/`](app/src/main/java/io/github/upalab/rucoylab/calculo/),
-adaptadas do helloyanis/rucoy-calculator (o crédito está no topo de cada arquivo).
+[`app/src/main/java/io/github/upalab/rucoylab/calculo/`](app/src/main/java/io/github/upalab/rucoylab/calculo/).
+O **código é próprio do UpaLab**, escrito a partir de [`docs/formulas.md`](docs/formulas.md) e
+[`docs/comparacao-formulas.md`](docs/comparacao-formulas.md). As **fórmulas e os dados** vêm da comunidade
+(ver Créditos).
 
 ## Roadmap resumido
 
@@ -56,14 +58,22 @@ Detalhes em [`docs/roadmap.md`](docs/roadmap.md).
 
 ## Créditos
 
-- **[helloyanis/rucoy-calculator](https://github.com/helloyanis/rucoy-calculator)** (GPL-3.0): fonte das
-  fórmulas (`Formulas.kt`) e da tabela de mobs usadas em `docs/formulas.md` e `data/mobs.json`.
-- **Mims** ([Mimsqueeze/Mims-Rucoy-Calculator](https://github.com/Mimsqueeze/Mims-Rucoy-Calculator)):
-  fórmulas de treino, segundo o crédito no README do rucoy-calculator.
+O código do UpaLab é próprio. As **fórmulas** e os **dados** (tabela de mobs) foram descobertos e
+reunidos pela comunidade:
+
+- **Minsi Hu ("mims")**, autor do **[Mims' Rucoy Calculator](https://github.com/Mimsqueeze/Mims-Rucoy-Calculator)**
+  (MIT): as fórmulas de treino, o cálculo de tempo até um stat e de treino offline, e a ideia de estimar
+  poções de mana. O próprio Mims agradece a Tribrid e potatoking pela ajuda com as fórmulas e o bot.
+- **hikari.ascii**: organizador da comunidade e mantenedor do **Mims' Rucoy Calculator - Backup**.
+- **helloyanis**, autor do **[rucoy-calculator](https://github.com/helloyanis/rucoy-calculator)**
+  (GPL-3.0): a tabela de mobs usada em [`data/mobs.json`](data/mobs.json), as fórmulas de defesa e os
+  ajustes mais recentes (especial do mago, anel de crítico).
+- **[Wiki Rucoy Online (Fandom)](https://rucoy-online.fandom.com/wiki/Monster_List)**: conferência de levels,
+  vida e cores dos mobs.
 - A comunidade de jogadores, que descobriu e testou essas fórmulas.
 
 Se você é autor de algum material usado aqui e quer ajustar o crédito ou pedir remoção, abra uma issue.
 
 ## Licença
 
-[GPL-3.0](LICENSE). Conteúdo derivado de projetos GPL-3.0 segue a mesma licença.
+[GPL-3.0](LICENSE).

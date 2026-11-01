@@ -2,106 +2,93 @@
  * UpaLab — Ferramentas para Rucoy Online (projeto de fã, sem vínculo com os desenvolvedores do jogo).
  * Copyright (C) 2026 UpaLab — GPL-3.0 (ver LICENSE).
  *
- * Lógica de escolha de mob ADAPTADA de helloyanis/rucoy-calculator (GPL-3.0),
- * ui/train/TrainFragment.kt, funções train() e ptrain(), commit f8677ba.
- *
- * Diferenças em relação à fonte:
- * - "Mobs equivalentes": a fonte mostra 2 mobs só em alguns índices fixos (pares com a mesma
- *   defesa). Aqui listamos qualquer mob com a mesma defesa do escolhido.
- * - "Stats que faltam": a fonte soma 1 a mais (incrementa depois do último teste). Aqui é o
- *   número exato de pontos até atingir a precisão mínima no próximo mob.
+ * Código próprio do UpaLab. Regra de escolha descrita em docs/formulas.md (seções 5 e 6):
+ * "o mob mais forte em que a chance de acertar ainda passa do mínimo".
  */
 package io.github.upalab.rucoylab.calculo
 
 import io.github.upalab.rucoylab.dados.Mob
 
-enum class Modo { AUTO, POWER }
+enum class Modo { NORMAL, POWER }
 
-data class Entrada(
-    val classe: Classe,
-    val level: Double,
-    val stat: Double,
-    val atkArma: Double,
-    val anelCritico: Boolean,
-    val modo: Modo,
-    val nMobs: Int = 1,
-)
+data class PedidoTreino(val personagem: Personagem, val modo: Modo, val mobs: Int = 1) {
+    val mobsJuntos get() = if (modo == Modo.NORMAL) 1 else mobs.coerceAtLeast(1)
+}
 
-data class ProximoMob(
+/** Como o seu golpe se sai contra um mob específico. */
+data class Desempenho(
     val mob: Mob,
-    /** Pontos de stat que faltam para treinar nele; null se passar de 1000 pontos. */
-    val statsFaltando: Int?,
-    /** Dano máximo que você já tira dele agora (≤ 0 = ainda não machuca). */
-    val danoMaximoAgora: Double,
-)
-
-data class ResultadoTreino(
-    val mob: Mob,
-    val equivalentes: List<Mob>,
-    val precisao: Double,
-    val precisaoMinima: Double,
+    val golpe: FaixaDano,
+    val acerto: Double,
     val ticksPorHora: Double,
-    val tetoTicks: Double,
-    val dano: Dano,
     val danoMedio: Double,
-    /** Segundos (a fonte assume 1 ataque por segundo). */
-    val tempoParaMatar: Double,
-    val proximo: ProximoMob?,
-    /** Nenhum mob atingiu a precisão mínima; o resultado é só o mob mais fraco. */
-    val nenhumIdeal: Boolean,
+    val segundosParaMatar: Double,
+)
+
+data class Sugestao(
+    val melhor: Desempenho,
+    /** Mobs com a mesma defesa do melhor: rendem o mesmo. */
+    val mesmaDefesa: List<Mob>,
+    val minimo: Double,
+    val teto: Double,
+    val proximo: Mob?,
+    /** Pontos de stat que faltam para o [proximo]; null = mais de 1000. */
+    val faltamPontos: Int?,
+    /** Nenhum mob passou do mínimo: [melhor] é só o mais fraco da lista. */
+    val semOpcaoBoa: Boolean,
 )
 
 object Treino {
 
-    private const val LIMITE_STATS = 1000
+    private fun golpe(p: Personagem, modo: Modo) =
+        if (modo == Modo.NORMAL) Combate.golpeNormal(p) else Combate.golpeEspecial(p)
 
-    private fun dano(e: Entrada, stat: Double): Dano =
-        if (e.modo == Modo.AUTO) Formulas.danoAuto(stat, e.atkArma, e.level)
-        else Formulas.danoEspecial(e.classe, stat, e.atkArma, e.level)
+    private fun serve(mob: Mob, modo: Modo) =
+        if (modo == Modo.NORMAL) !mob.puladoNoTreinoAuto else !mob.puladoNoPowerTraining
 
-    private fun pulado(e: Entrada, m: Mob) =
-        if (e.modo == Modo.AUTO) m.puladoNoTreinoAuto else m.puladoNoPowerTraining
-
-    fun calcular(mobs: List<Mob>, e: Entrada): ResultadoTreino? {
-        if (mobs.isEmpty() || e.stat <= 0 || e.atkArma <= 0 || e.level <= 0) return null
-        val n = if (e.modo == Modo.AUTO) 1 else e.nMobs.coerceAtLeast(1)
-        val minimo = if (e.modo == Modo.AUTO) Formulas.PRECISAO_MINIMA_AUTO else Formulas.precisaoMinimaPower(n)
-        val d = dano(e, e.stat)
-
-        // Mesma ordem da fonte: do fim da lista (mais forte) pro começo.
-        val candidatos = mobs.filterNot { pulado(e, it) }
-        val ideal = candidatos.asReversed().firstOrNull {
-            Formulas.precisao(d, it.defesa.toDouble(), e.anelCritico) >= minimo
-        }
-        val mob = ideal ?: mobs.first()
-        val acc = Formulas.precisao(d, mob.defesa.toDouble(), e.anelCritico)
-        val ticks = if (e.modo == Modo.AUTO) Formulas.ticksPorHoraAuto(acc) else Formulas.ticksPorHoraPower(acc, n)
-        val teto = if (e.modo == Modo.AUTO) Formulas.TICKS_POR_HORA_AUTO else Formulas.tetoPowerTraining(n)
-        val medio = Formulas.danoMedio(d, mob.defesa.toDouble(), e.anelCritico)
-
-        val equivalentes = candidatos.filter { it != mob && it.defesa == mob.defesa }
-
-        val idx = candidatos.indexOf(mob)
-        val proxMob = if (idx >= 0) candidatos.drop(idx + 1).firstOrNull { it.defesa > mob.defesa } else null
-        val proximo = proxMob?.let { p ->
-            val faltam = (0..LIMITE_STATS).firstOrNull { extra ->
-                Formulas.precisao(dano(e, e.stat + extra), p.defesa.toDouble(), e.anelCritico) >= minimo
-            }
-            ProximoMob(p, faltam, d.maximo - p.defesa)
-        }
-
-        return ResultadoTreino(
+    fun desempenho(pedido: PedidoTreino, mob: Mob): Desempenho {
+        val p = pedido.personagem
+        val g = golpe(p, pedido.modo)
+        val def = mob.defesa.toDouble()
+        val acerto = Combate.chanceDeAcertar(g, def, p.anelCritico)
+        val medio = Combate.danoMedio(g, def, p.anelCritico)
+        return Desempenho(
             mob = mob,
-            equivalentes = equivalentes,
-            precisao = acc,
-            precisaoMinima = minimo,
-            ticksPorHora = ticks,
-            tetoTicks = teto,
-            dano = d,
+            golpe = g,
+            acerto = acerto,
+            ticksPorHora = Ticks.porHora(acerto, pedido.mobsJuntos),
             danoMedio = medio,
-            tempoParaMatar = if (medio > 0) Formulas.tempoParaMatar(mob.vida.toDouble(), medio) else Double.POSITIVE_INFINITY,
+            segundosParaMatar = Combate.segundosParaMatar(mob.vida.toDouble(), medio),
+        )
+    }
+
+    fun sugerir(lista: List<Mob>, pedido: PedidoTreino): Sugestao? {
+        val p = pedido.personagem
+        if (lista.isEmpty() || p.level <= 0 || p.stat <= 0 || p.ataqueArma <= 0) return null
+
+        val minimo = Ticks.precisaoMinima(pedido.mobsJuntos)
+        val opcoes = lista.filter { serve(it, pedido.modo) }.sortedBy { it.defesa }
+        val passa = { m: Mob -> desempenho(pedido, m).acerto >= minimo }
+
+        val escolhido = opcoes.lastOrNull(passa)
+        val melhor = desempenho(pedido, escolhido ?: lista.minBy { it.defesa })
+        val proximo = opcoes.firstOrNull { it.defesa > melhor.mob.defesa }
+
+        val faltam = proximo?.let { alvo ->
+            (0..1000).firstOrNull { extra ->
+                val mais = pedido.copy(personagem = p.copy(stat = p.stat + extra))
+                desempenho(mais, alvo).acerto >= minimo
+            }
+        }
+
+        return Sugestao(
+            melhor = melhor,
+            mesmaDefesa = opcoes.filter { it != melhor.mob && it.defesa == melhor.mob.defesa },
+            minimo = minimo,
+            teto = Ticks.teto(pedido.mobsJuntos),
             proximo = proximo,
-            nenhumIdeal = ideal == null,
+            faltamPontos = faltam,
+            semOpcaoBoa = escolhido == null,
         )
     }
 }

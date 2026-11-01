@@ -5,115 +5,134 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
+import kotlin.math.pow
 
 /**
- * Confere as fórmulas contra valores calculados à mão a partir de docs/formulas.md.
- * Isso garante que o app faz o MESMO cálculo da fonte — não que a fonte está certa no jogo.
+ * Confere o código próprio do UpaLab contra valores calculados à mão a partir de
+ * docs/formulas.md e docs/comparacao-formulas.md.
+ * Isso garante que fazemos a MESMA conta da comunidade — não que a conta está certa no jogo.
  */
 class FormulasTest {
 
-    private val delta = 1e-6
+    private val d = 1e-6
+    private val mobs by lazy { Mobs.deJson(File("../data/mobs.json").readText()) }
+    private fun melee(level: Double, stat: Double, arma: Double, anel: Boolean = false) =
+        Personagem(Classe.MELEE, level, stat, arma, anel)
 
-    @Test fun danoAuto() {
-        val d = Formulas.danoAuto(stat = 50.0, atkArma = 20.0, level = 40.0)
-        assertEquals(60.0, d.minimo, delta)   // 50*20/20 + 40/4
-        assertEquals(110.0, d.maximo, delta)  // 50*20/10 + 40/4
+    // ---- Combate ----
+
+    @Test fun golpeNormal() {
+        val g = Combate.golpeNormal(melee(40.0, 50.0, 20.0))
+        assertEquals(60.0, g.menor, d)   // 50*20/20 + 40/4
+        assertEquals(110.0, g.maior, d)  // 50*20/10 + 40/4
     }
 
-    @Test fun especialMeleeE15xAuto() {
-        val auto = Formulas.danoAuto(50.0, 20.0, 40.0)
-        val esp = Formulas.danoEspecial(Classe.MELEE, 50.0, 20.0, 40.0)
-        assertEquals(auto.maximo * 1.5, esp.maximo, delta)
+    @Test fun especialMeleeE15xONormal() {
+        val p = melee(40.0, 50.0, 20.0)
+        assertEquals(165.0, Combate.golpeEspecial(p).maior, d)
     }
 
-    @Test fun especialMagic() {
-        val esp = Formulas.danoEspecial(Classe.MAGIC, 50.0, 20.0, 40.0)
-        assertEquals(1.5 * (1.08 * 50 * 20 / 20 + 9 * 40.0 / 32), esp.minimo, delta)
+    @Test fun especialMagoComFatorAConfirmar() {
+        val g = Combate.golpeEspecial(Personagem(Classe.MAGIC, 40.0, 50.0, 20.0))
+        assertEquals(1.5 * (1.08 * 50 * 20 / 20 + 9 * 40.0 / 32), g.menor, d)
     }
 
-    @Test fun precisaoLimitadaA1() {
-        val d = Dano(60.0, 110.0)
-        assertEquals(1.0, Formulas.precisaoNormal(d, defesaMob = 10.0), delta)
-        assertEquals(0.5, Formulas.precisaoNormal(d, defesaMob = 85.0), delta)
+    @Test fun chanceDeAcertarIgualAsFontesSemAnel() {
+        val g = FaixaDano(60.0, 110.0)
+        // fontes: 0,99 × (110−85)/(110−60) + 0,01 × min(1, (115,5−85)/(115,5−110))
+        assertEquals(0.99 * 0.5 + 0.01 * 1.0, Combate.chanceDeAcertar(g, 85.0, false), d)
+        assertEquals(1.0, Combate.chanceDeAcertar(g, 10.0, false), d)
     }
 
-    @Test fun precisaoMinimaPower() {
-        assertEquals(0.1749, Formulas.precisaoMinimaPower(1), 1e-4)
-        assertEquals(0.0916, Formulas.precisaoMinimaPower(2), 1e-4)
-        assertEquals(0.0377, Formulas.precisaoMinimaPower(5), 1e-4)
+    @Test fun chanceDeAcertarNuncaENegativa() {
+        assertEquals(0.0, Combate.chanceDeAcertar(FaixaDano(10.0, 20.0), 500.0, false), d)
     }
 
-    @Test fun tetos() {
-        assertEquals(3600.0, Formulas.ticksPorHoraAuto(1.0), delta)
-        assertEquals(18000.0, Formulas.tetoPowerTraining(5), delta)
-        assertEquals(18000.0, Formulas.tetoPowerTraining(8), delta)
-    }
-
-    @Test fun ticksNoLimiarDao85PorCento() {
-        assertEquals(0.8538, Formulas.ticksPorHoraAuto(0.1749) / 3600, 1e-4)
-    }
-
-    @Test fun ticksAteStatEDescontinuidadeConhecida() {
-        assertEquals(16015.0, Formulas.ticksAteStat(54.0), 1.0)
-        assertEquals(7483.0, Formulas.ticksAteStat(55.0), 1.0)  // ❗ cai — documentado
-    }
-
-    @Test fun statPelosTicksVoltaNoStat() {
-        assertEquals(30.0, Formulas.statPelosTicks(Formulas.ticksAteStat(30.0)), 1e-6)
+    @Test fun danoMedioIgualAsFontesSemAnel() {
+        val g = FaixaDano(60.0, 110.0)
+        val acerto = 0.99 * 0.5 + 0.01
+        // fontes: acerto × 0,99 × (25+0)/2 + 0,01 × (30,5+25)/2
+        assertEquals(acerto * 0.99 * 12.5 + 0.01 * 27.75, Combate.danoMedio(g, 85.0, false), d)
     }
 
     @Test fun defesa() {
-        assertEquals(10.0 + 50 + 50 * 20.0 / 50 + 5, Formulas.defesaAlta(40.0, 50.0, 20.0, 5.0), delta)
-        assertEquals(5.0 + 25 + 50 * 20.0 / 100 + 5, Formulas.defesaBaixa(40.0, 50.0, 20.0, 5.0), delta)
+        val a = Combate.Armadura(defesa = 50.0, escudo = 20.0, outras = 5.0)
+        assertEquals(10.0 + 50 + 20 + 5, Combate.defesaAlta(40.0, a), d)
+        assertEquals(5.0 + 25 + 10 + 5, Combate.defesaBaixa(40.0, a), d)
     }
 
-    @Test fun tabelaDeMobsCarrega() {
-        val mobs = Mobs.deJson(File("../data/mobs.json").readText())
+    // ---- Ticks ----
+
+    @Test fun precisaoMinima() {
+        assertEquals(0.1749, Ticks.precisaoMinima(1), 1e-4)
+        assertEquals(0.0916, Ticks.precisaoMinima(2), 1e-4)
+        assertEquals(0.0377, Ticks.precisaoMinima(5), 1e-4)
+    }
+
+    @Test fun ticksNormalEPower() {
+        assertEquals(3600.0, Ticks.porHora(1.0), d)
+        assertEquals(3600 * (1 - 0.5.pow(10)), Ticks.porHora(0.5), d)
+        assertEquals(10800 * (1 - 0.8.pow(30)), Ticks.porHora(0.2, 3), d)
+        assertEquals(18000.0, Ticks.teto(8), d)
+        // No mínimo, rende ~85,4% do teto.
+        assertEquals(0.8538, Ticks.porHora(0.1749) / 3600, 1e-4)
+    }
+
+    // ---- Progressão ----
+
+    @Test fun ticksDentroDeUmaFaixaIgualAsFontes() {
+        val baixa = { s: Double -> s.pow(s / 1000 + 2.373) }
+        val alta = { s: Double -> s.pow(s / 1000 + 2.171) }
+        assertEquals(baixa(50.0) - baixa(30.0), Progressao.ticksEntre(30, 50), 1e-6)
+        assertEquals(alta(90.0) - alta(60.0), Progressao.ticksEntre(60, 90), 1e-6)
+    }
+
+    @Test fun ticksNuncaFicamNegativosNaVirada54Para55() {
+        val t = Progressao.ticksEntre(50, 60)
+        assertTrue("50→60 deu $t", t > 0)   // as fontes dão −3.810 aqui
+    }
+
+    @Test fun statDepoisVoltaNoMesmoPonto() {
+        val ticks = Progressao.ticksEntre(40, 70)
+        assertEquals(70.0, Progressao.statDepois(40.0, ticks), 1e-6)
+    }
+
+    @Test fun offlineUsa600PorHoraEmQualquerFaixa() {
+        assertEquals(Progressao.ticksEntre(20, 30) / 600, Progressao.horasOffline(20, 30), d)
+        // A fonte helloyanis errava abaixo do 55; aqui usa a curva certa.
+        val baixa = { s: Double -> s.pow(s / 1000 + 2.373) }
+        assertEquals((baixa(30.0) - baixa(20.0)) / 600, Progressao.horasOffline(20, 30), 1e-6)
+    }
+
+    @Test fun expEntreLevels() {
+        val e = { l: Double -> l.pow(l / 1000 + 3) }
+        assertEquals(e(101.0) - e(100.0), Progressao.expEntre(100, 101), 1e-3)
+    }
+
+    // ---- Poções ----
+
+    @Test fun pocoesComoNaIdeiaDoMims() {
+        // 4 mobs, sem bônus: 40.000 ticks → 10.000 especiais → 500.000 de mana → 5.000 poções normais.
+        assertEquals(10000.0, Pocoes.especiais(40000.0, 4, 1.0), d)
+        assertEquals(500000.0, Pocoes.mana(40000.0, 4, 1.0), d)
+        val normal = Pocoes.gasto(40000.0, 4, 1.0).first { it.pocao == Pocao.NORMAL }
+        assertEquals(5000L, normal.quantidade)
+        assertEquals(250000L, normal.gold)
+        assertEquals(5000.0, Pocoes.especiais(40000.0, 4, 2.0), d)
+    }
+
+    // ---- Treino ----
+
+    @Test fun tabelaDeMobs() {
         assertEquals(44, mobs.size)
-        assertEquals("Rat", mobs.first().nome)
-        assertTrue(mobs.count { it.puladoNoTreinoAuto } == 2)
+        assertEquals(2, mobs.count { it.puladoNoTreinoAuto })
+        assertEquals(17, mobs.count { it.puladoNoPowerTraining })
     }
 
-    private val mobs by lazy { Mobs.deJson(File("../data/mobs.json").readText()) }
-
-    @Test fun ondeTreinarAutoEscolheMobComPrecisaoMinima() {
-        val r = Treino.calcular(mobs, Entrada(Classe.MELEE, 40.0, 50.0, 20.0, false, Modo.AUTO))!!
-        assertTrue(r.precisao >= Formulas.PRECISAO_MINIMA_AUTO)
-        assertTrue(!r.mob.puladoNoTreinoAuto)
-        assertTrue(!r.nenhumIdeal)
-        // O próximo mob, mais forte, ainda não pode ter a precisão mínima.
-        val p = r.proximo!!
-        assertTrue(p.mob.defesa > r.mob.defesa)
-        assertTrue(p.statsFaltando!! > 0)
-        // Com os stats que faltam, a precisão no próximo mob chega no mínimo (e 1 a menos não chega).
-        val dMais = Formulas.danoAuto(50.0 + p.statsFaltando!!, 20.0, 40.0)
-        val dMenos = Formulas.danoAuto(50.0 + p.statsFaltando!! - 1, 20.0, 40.0)
-        assertTrue(Formulas.precisao(dMais, p.mob.defesa.toDouble(), false) >= 0.1749)
-        assertTrue(Formulas.precisao(dMenos, p.mob.defesa.toDouble(), false) < 0.1749)
-    }
-
-    @Test fun mobsComMesmaDefesaAparecemComoEquivalentes() {
-        // Scorpion e Cobra têm defesa 18 na fonte.
-        val r = Treino.calcular(mobs, Entrada(Classe.MELEE, 10.0, 12.0, 4.0, false, Modo.AUTO))!!
-        if (r.mob.defesa == 18) assertTrue(r.equivalentes.isNotEmpty())
-        r.equivalentes.forEach { assertEquals(r.mob.defesa, it.defesa) }
-    }
-
-    @Test fun powerTrainingUsaEspecialELimiteDosMobs() {
-        val r = Treino.calcular(mobs, Entrada(Classe.DISTANCE, 100.0, 80.0, 30.0, false, Modo.POWER, 3))!!
-        assertEquals(10800.0, r.tetoTicks, 1e-9)
-        assertTrue(r.precisao >= Formulas.precisaoMinimaPower(3))
-        assertTrue(!r.mob.puladoNoPowerTraining)
-    }
-
-    @Test fun entradaInvalidaNaoCalcula() {
-        assertEquals(null, Treino.calcular(mobs, Entrada(Classe.MELEE, 0.0, 50.0, 20.0, false, Modo.AUTO)))
-    }
-
-    /** Valores esperados calculados replicando a lógica da fonte (TrainFragment.train()). */
-    @Test fun mesmoMobQueOAppOriginal() {
-        fun mob(stat: Double, atk: Double, lvl: Double) =
-            Treino.calcular(mobs, Entrada(Classe.MELEE, lvl, stat, atk, false, Modo.AUTO))!!.mob.let { it.nome to it.level }
+    /** Valores esperados calculados replicando a regra das fontes (ver histórico de testes). */
+    @Test fun mesmoMobQueAsFontes() {
+        fun mob(stat: Double, arma: Double, level: Double) =
+            Treino.sugerir(mobs, PedidoTreino(melee(level, stat, arma), Modo.NORMAL))!!.melhor.mob.let { it.nome to it.level }
         assertEquals("Skeleton Archer" to 80, mob(50.0, 20.0, 40.0))
         assertEquals("Rat" to 1, mob(10.0, 5.0, 5.0))
         assertEquals("Lizard Captain" to 180, mob(120.0, 35.0, 150.0))
@@ -121,9 +140,51 @@ class FormulasTest {
         assertEquals("Yeti" to 350, mob(200.0, 44.0, 260.0))
     }
 
+    @Test fun proximoMobEPontosQueFaltam() {
+        val p = melee(40.0, 50.0, 20.0)
+        val s = Treino.sugerir(mobs, PedidoTreino(p, Modo.NORMAL))!!
+        val alvo = s.proximo!!
+        val faltam = s.faltamPontos!!
+        assertTrue(alvo.defesa > s.melhor.mob.defesa)
+        fun acerto(extra: Int) = Combate.chanceDeAcertar(Combate.golpeNormal(p.copy(stat = p.stat + extra)), alvo.defesa.toDouble(), false)
+        assertTrue(acerto(faltam) >= 0.1749)
+        assertTrue(acerto(faltam - 1) < 0.1749)
+    }
+
+    @Test fun powerTraining() {
+        val s = Treino.sugerir(mobs, PedidoTreino(Personagem(Classe.DISTANCE, 100.0, 80.0, 30.0), Modo.POWER, 3))!!
+        assertEquals(10800.0, s.teto, d)
+        assertTrue(s.melhor.acerto >= Ticks.precisaoMinima(3))
+        assertTrue(!s.melhor.mob.puladoNoPowerTraining)
+    }
+
+    @Test fun buffsSomamNoStat() {
+        val sem = Treino.sugerir(mobs, PedidoTreino(melee(40.0, 50.0, 20.0), Modo.NORMAL))!!
+        val com = Treino.sugerir(mobs, PedidoTreino(melee(40.0, 50.0 + sem.faltamPontos!!, 20.0), Modo.NORMAL))!!
+        assertTrue(com.melhor.mob.defesa >= sem.proximo!!.defesa)
+    }
+
+    @Test fun entradaInvalida() {
+        assertEquals(null, Treino.sugerir(mobs, PedidoTreino(melee(0.0, 50.0, 20.0), Modo.NORMAL)))
+    }
+
     @Test fun assassinosTemCorConferida() {
         val a = mobs.filter { it.nome.startsWith("Assassin") }.associate { it.level to it.apelido }
         assertEquals(mapOf(45 to "vermelho", 50 to "amarelo", 55 to "cinza"), a)
-        assertEquals("Assassin (amarelo)", mobs.first { it.level == 50 }.nomeExibido)
+    }
+
+    /** 600 fichas aleatórias: a escolha do mob tem que ser igual à regra das fontes (sem anel). */
+    @Test fun seiscentasFichasIguaisAsFontes() {
+        val linhas = javaClass.getResource("/casos-fontes.csv")!!.readText().lines().filter { it.isNotBlank() && !it.startsWith("#") }
+        assertEquals(600, linhas.size)
+        val erros = linhas.mapNotNull { l ->
+            val c = l.split(",")
+            val p = Personagem(Classe.valueOf(c[0]), c[1].toDouble(), c[2].toDouble(), c[3].toDouble())
+            val modo = if (c[4] == "N") Modo.NORMAL else Modo.POWER
+            val s = Treino.sugerir(mobs, PedidoTreino(p, modo, c[5].toInt()))!!
+            val obtido = if (s.semOpcaoBoa) "" else "${s.melhor.mob.nome}|${s.melhor.mob.level}"
+            if (obtido != c[6]) "$l → $obtido" else null
+        }
+        assertTrue("Diferenças:\n" + erros.take(10).joinToString("\n"), erros.isEmpty())
     }
 }

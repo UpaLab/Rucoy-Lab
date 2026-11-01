@@ -38,9 +38,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import io.github.upalab.rucoylab.calculo.Classe
-import io.github.upalab.rucoylab.calculo.Entrada
+import io.github.upalab.rucoylab.calculo.Combate
 import io.github.upalab.rucoylab.calculo.Modo
-import io.github.upalab.rucoylab.calculo.ResultadoTreino
+import io.github.upalab.rucoylab.calculo.PedidoTreino
+import io.github.upalab.rucoylab.calculo.Personagem
+import io.github.upalab.rucoylab.calculo.Sugestao
 import io.github.upalab.rucoylab.calculo.Treino
 import io.github.upalab.rucoylab.dados.Mobs
 import java.util.Locale
@@ -48,7 +50,7 @@ import kotlin.math.roundToInt
 
 private const val PREFS = "onde_treinar"
 
-private val Classe.rotulo get() = when (this) {
+val Classe.rotulo get() = when (this) {
     Classe.MELEE -> "Melee"
     Classe.DISTANCE -> "Distance"
     Classe.MAGIC -> "Magic"
@@ -64,21 +66,23 @@ fun TelaOndeTreinar(modifier: Modifier) {
     var level by rememberSaveable { mutableStateOf(prefs.getString("level", "") ?: "") }
     var stat by rememberSaveable { mutableStateOf(prefs.getString("stat", "") ?: "") }
     var arma by rememberSaveable { mutableStateOf(prefs.getString("arma", "") ?: "") }
+    var buffs by rememberSaveable { mutableStateOf(prefs.getString("buffs", "") ?: "") }
     var anel by rememberSaveable { mutableStateOf(prefs.getBoolean("anel", false)) }
     var modo by rememberSaveable { mutableStateOf(Modo.entries[prefs.getInt("modo", 0)]) }
     var nMobs by rememberSaveable { mutableStateOf(prefs.getInt("nMobs", 3)) }
 
-    LaunchedEffect(classe, level, stat, arma, anel, modo, nMobs) {
+    LaunchedEffect(classe, level, stat, arma, buffs, anel, modo, nMobs) {
         prefs.edit()
             .putInt("classe", classe.ordinal).putString("level", level).putString("stat", stat)
-            .putString("arma", arma).putBoolean("anel", anel).putInt("modo", modo.ordinal)
+            .putString("arma", arma).putString("buffs", buffs).putBoolean("anel", anel).putInt("modo", modo.ordinal)
             .putInt("nMobs", nMobs).apply()
     }
 
-    val resultado = remember(classe, level, stat, arma, anel, modo, nMobs) {
+    val resultado = remember(classe, level, stat, arma, buffs, anel, modo, nMobs) {
         val l = level.toDoubleOrNull(); val s = stat.toDoubleOrNull(); val a = arma.toDoubleOrNull()
+        val b = buffs.toDoubleOrNull() ?: 0.0
         if (l == null || s == null || a == null) null
-        else Treino.calcular(mobs, Entrada(classe, l, s, a, anel, modo, nMobs))
+        else Treino.sugerir(mobs, PedidoTreino(Personagem(classe, l, s + b, a, anel), modo, nMobs))
     }
 
     Column(
@@ -90,12 +94,22 @@ fun TelaOndeTreinar(modifier: Modifier) {
             CampoNumero("Level", level, Modifier.weight(1f)) { level = it }
             CampoNumero("Stat (${classe.rotulo})", stat, Modifier.weight(1f)) { stat = it }
         }
-        CampoNumero("Ataque da arma", arma, Modifier.fillMaxWidth()) { arma = it }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            CampoNumero("Ataque da arma", arma, Modifier.weight(1f)) { arma = it }
+            CampoNumero("Buffs (+stat)", buffs, Modifier.weight(1f)) { buffs = it }
+        }
+        Text("Buffs: pontos extras de stat (ex.: o +1 de uma arma 34+1). Deixe vazio se não tiver.", style = MaterialTheme.typography.bodySmall)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Anel de crítico", Modifier.weight(1f))
+            Column(Modifier.weight(1f)) {
+                Text("Anel de crítico")
+                Text("🧪 Experimental: valores ainda sem confirmação.", style = MaterialTheme.typography.bodySmall)
+            }
             Switch(checked = anel, onCheckedChange = { anel = it })
         }
-        Escolha("Tipo de treino", Modo.entries, modo, { if (it == Modo.AUTO) "Ataque normal" else "Power training" }) { modo = it }
+        if (classe == Classe.MAGIC && modo == Modo.POWER) {
+            Text("🔶 Especial do mago: fator ${Combate.FATOR_MAGO_A_CONFIRMAR} ainda a confirmar no jogo.", style = MaterialTheme.typography.bodySmall)
+        }
+        Escolha("Tipo de treino", Modo.entries, modo, { if (it == Modo.NORMAL) "Ataque normal" else "Power training" }) { modo = it }
         if (modo == Modo.POWER) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Mobs juntos:", Modifier.weight(1f))
@@ -113,7 +127,7 @@ fun TelaOndeTreinar(modifier: Modifier) {
         }
 
         Text(
-            "Fórmulas da comunidade, não oficiais (fonte: helloyanis/rucoy-calculator). " +
+            "Fórmulas da comunidade, não oficiais (créditos na tela Créditos). " +
                 "Podem estar erradas ou desatualizadas.",
             style = MaterialTheme.typography.bodySmall,
         )
@@ -121,40 +135,42 @@ fun TelaOndeTreinar(modifier: Modifier) {
 }
 
 @Composable
-private fun CartaoResultado(r: ResultadoTreino, modo: Modo) {
+private fun CartaoResultado(s: Sugestao, modo: Modo) {
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            if (r.nenhumIdeal) {
+            val r = s.melhor
+            if (s.semOpcaoBoa) {
                 Text("Nenhum mob da lista te dá a precisão mínima. Mostrando o mais fraco.", fontWeight = FontWeight.Bold)
             }
             Text("Treine em:", style = MaterialTheme.typography.labelLarge)
             Text("${r.mob.nomeExibido} (Lv ${r.mob.level})", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-            if (r.equivalentes.isNotEmpty()) {
-                Text("Vale igual: " + r.equivalentes.joinToString { "${it.nomeExibido} (Lv ${it.level})" })
+            if (s.mesmaDefesa.isNotEmpty()) {
+                Text("Vale igual: " + s.mesmaDefesa.joinToString { "${it.nomeExibido} (Lv ${it.level})" })
             }
-            Linha("Precisão", porcento(r.precisao) + "  (mínimo ${porcento(r.precisaoMinima)})")
-            Linha("Ticks por hora", "${milhar(r.ticksPorHora)} / ${milhar(r.tetoTicks)}")
-            Linha(if (modo == Modo.AUTO) "Dano (normal)" else "Dano (especial)", "${milhar(r.dano.minimo)} – ${milhar(r.dano.maximo)}")
-            Linha("Tempo médio pra matar", tempo(r.tempoParaMatar))
-            r.proximo?.let { p ->
+            Linha("Precisão", porcento(r.acerto) + "  (mínimo ${porcento(s.minimo)})")
+            Linha("Ticks por hora", "${milhar(r.ticksPorHora)} / ${milhar(s.teto)}")
+            Linha(if (modo == Modo.NORMAL) "Dano (normal)" else "Dano (especial)", "${milhar(r.golpe.menor)} – ${milhar(r.golpe.maior)}")
+            Linha("Tempo médio pra matar", tempo(r.segundosParaMatar))
+            s.proximo?.let { p ->
                 Text("")
-                Text("Próximo mob: ${p.mob.nomeExibido} (Lv ${p.mob.level})", fontWeight = FontWeight.Bold)
+                Text("Próximo mob: ${p.nomeExibido} (Lv ${p.level})", fontWeight = FontWeight.Bold)
                 Text(
-                    when (p.statsFaltando) {
+                    when (s.faltamPontos) {
                         null -> "Precisa de mais de 1000 pontos de stat."
                         0 -> "Você já pode treinar nele."
                         1 -> "Falta 1 ponto de stat."
-                        else -> "Faltam ${p.statsFaltando} pontos de stat."
+                        else -> "Faltam ${s.faltamPontos} pontos de stat."
                     },
                 )
-                if (p.danoMaximoAgora >= 1) Text("Hoje você já tira até ${milhar(p.danoMaximoAgora)} de dano nele.")
+                val agora = r.golpe.maior - p.defesa
+                if (agora >= 1) Text("Hoje você já tira até ${milhar(agora)} de dano nele.")
             }
         }
     }
 }
 
 @Composable
-private fun Linha(rotulo: String, valor: String) {
+fun Linha(rotulo: String, valor: String) {
     Row(Modifier.fillMaxWidth()) {
         Text(rotulo, Modifier.weight(1f))
         Text(valor, fontWeight = FontWeight.Bold)

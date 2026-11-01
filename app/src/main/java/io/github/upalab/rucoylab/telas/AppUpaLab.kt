@@ -63,6 +63,7 @@ fun AppUpaLab() {
             when (tela) {
                 Tela.INICIO -> TelaInicio(m) { tela = it }
                 Tela.ONDE_TREINAR -> TelaOndeTreinar(m)
+                Tela.PROGRESSO -> TelaProgresso(m)
                 Tela.MOBS -> TelaMobs(m)
                 Tela.CREDITOS -> TelaCreditos(m)
                 else -> TelaEmBreve(tela, m)

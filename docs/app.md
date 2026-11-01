@@ -54,9 +54,9 @@ app/
 
 - **Fórmulas separadas das telas**: assim os testes automáticos conferem os cálculos toda vez que algo
   muda.
-- **Reaproveitar o helloyanis/rucoy-calculator**: o app dele desenha as telas com um sistema mais antigo
-  (não é Compose). Por isso vamos reaproveitar principalmente as **fórmulas e a tabela de mobs**, com
-  crédito no README, na tela de Créditos e no topo de cada arquivo adaptado.
+- **Código próprio**: o cálculo foi escrito do zero pelo UpaLab, seguindo `docs/formulas.md` e
+  `docs/comparacao-formulas.md`. Das fontes da comunidade vêm só as **fórmulas e os dados** (tabela de
+  mobs), com crédito no README e na tela de Créditos.
 - **Poucas dependências**: dependência é código pronto de terceiros que o app inclui. Quanto menos, mais
   leve e mais seguro. A ideia é usar só as bibliotecas oficiais do Android/Compose.
 
