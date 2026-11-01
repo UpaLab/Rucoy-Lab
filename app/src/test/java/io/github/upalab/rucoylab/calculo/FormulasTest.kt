@@ -112,38 +112,58 @@ class FormulasTest {
     // ---- Poções ----
 
     @Test fun pocoesComValoresDaWiki() {
-        val basica = TiposPocao.MANA[0]
-        assertEquals(100.0, basica.recuperaMedia, d)       // wiki: 70–130
+        assertEquals(100.0, TiposPocao.MANA[0].recuperaMedia, d)       // wiki: 70–130
         assertEquals(250.0, TiposPocao.MANA[1].recuperaMedia, d) // wiki: 200–300
         assertEquals(1.25, TiposPocao.MANA[1].cooldownSeg, d)    // notas oficiais 1.22
-        // 4 mobs, sem bônus, 40.000 ticks: 10.000 especiais × 50 = 500.000 de mana → 5.000 básicas.
-        val p = Pocoes.planoMana(40000.0, 14400.0, 4, 1.0, AjusteMana.de(basica))
-        assertEquals(10000.0, p.especiais, d)
-        assertEquals(5000L, p.pocoes)
-        assertEquals(250000L, p.gold)
+    }
+
+    private val basica get() = AjusteMana.de(TiposPocao.MANA[0])
+    private fun ticksDoPonto(s: Int) = Progressao.ticksDoPonto(s)
+
+    /** Teste A do dono: 100 especiais em ~145 s, 50 poções, de 98 (93%) a 99 (44%), bônus 2×. */
+    @Test fun reproduzTesteA() {
+        val ganhou = 0.07 * ticksDoPonto(98) + 0.44 * ticksDoPonto(99)   // ≈ 479 ticks
+        val p = PowerTraining.plano(Estilo.RAPIDO, ganhou, ParametrosPower(bonus = 2.0), basica)!!
+        assertEquals(100.0, p.especiais, 6.0)          // ~100 especiais
+        assertEquals(145.0, p.horas * 3600, 10.0)      // ~145 s
+        assertEquals(50.0, p.pocoes.toDouble(), 5.0)   // ~50 poções
+    }
+
+    /** Teste B do dono: ~91 s, ~9,4 especiais, 3 poções + 190 de mana da barra, de 99 (44%) a 99 (58%), bônus 2×. */
+    @Test fun reproduzTesteB() {
+        val ganhou = 0.14 * ticksDoPonto(99)                              // ≈ 132 ticks
+        val p = PowerTraining.plano(Estilo.ECONOMICO, ganhou, ParametrosPower(bonus = 2.0), basica)!!
+        assertEquals(9.4, p.especiais, 1.0)
+        assertEquals(91.0, p.horas * 3600, 10.0)
+        assertEquals(470.0, p.manaTotal, 50.0)
+    }
+
+    @Test fun economicoGastaMenosPocaoERapidoEMaisRapido() {
+        val t = Progressao.ticksEntre(70, 90)
+        val r = PowerTraining.plano(Estilo.RAPIDO, t, ParametrosPower(), basica)!!
+        val e = PowerTraining.plano(Estilo.ECONOMICO, t, ParametrosPower(), basica)!!
+        assertTrue(e.pocoes < r.pocoes)
+        assertTrue(r.horas < e.horas)
+    }
+
+    @Test fun soNoveGolpesContam() {
+        val nove = PowerTraining.ciclo(Estilo.ECONOMICO, ParametrosPower(golpesEntreEspeciais = 9))
+        val quinze = PowerTraining.ciclo(Estilo.ECONOMICO, ParametrosPower(golpesEntreEspeciais = 15))
+        assertEquals(nove.ticks, quinze.ticks, d)
+        assertTrue(quinze.segundos > nove.segundos)
     }
 
     @Test fun regeneracaoDescontaMana() {
-        val a = AjusteMana.de(TiposPocao.MANA[0]).copy(regenPorSegundo = 10.0)
-        // 14.400 ticks a 14.400/h = 1 h → regen 36.000 de mana.
-        val p = Pocoes.planoMana(14400.0, 14400.0, 4, 1.0, a)
-        assertEquals(36000.0, p.manaDaRegeneracao, d)
-        assertEquals(((3600 * 50.0 - 36000) / 100).toLong(), p.pocoes)
+        val p0 = PowerTraining.plano(Estilo.RAPIDO, 10000.0, ParametrosPower(), basica)!!
+        val p1 = PowerTraining.plano(Estilo.RAPIDO, 10000.0, ParametrosPower(), basica.copy(regenPorSegundo = 5.0))!!
+        assertTrue(p1.pocoes < p0.pocoes)
     }
 
     @Test fun cooldownLimitaORitmo() {
-        // 1 mob a 3.600 ticks/h = 1 especial por segundo = 50 mana/s; básica dá 100 a cada 1 s → aguenta.
-        val ok = Pocoes.planoMana(3600.0, 3600.0, 1, 1.0, AjusteMana.de(TiposPocao.MANA[0]))
-        assertTrue(!ok.limitadoPeloCooldown)
-        // Especial custando 300 → precisa de 3 poções/s, mas o cooldown deixa 1/s → limitado.
-        val caro = Pocoes.planoMana(3600.0, 3600.0, 1, 1.0, AjusteMana.de(TiposPocao.MANA[0]).copy(manaPorEspecial = 300.0))
-        assertTrue(caro.limitadoPeloCooldown)
-        assertEquals(3.0, caro.horasReais, 1e-6)  // 100 mana/s ÷ 300 = 1/3 especial por segundo
-    }
-
-    @Test fun ticksPorEspecialParaEmCincoMobs() {
-        assertEquals(5.0, Pocoes.ticksPorEspecial(8, 1.0), d)
-        assertEquals(8.0, Pocoes.ticksPorEspecial(4, 2.0), d)
+        // Básica: até 100 de mana/s. Especial custando 300 a cada 1,45 s pede ~207/s → limitado.
+        val p = PowerTraining.plano(Estilo.RAPIDO, 1000.0, ParametrosPower(), basica.copy(manaPorEspecial = 300.0))!!
+        assertTrue(p.limitadoPeloCooldown)
+        assertEquals(3.0, p.ciclo.segundos, 1e-6)  // 300 ÷ 100
     }
 
     @Test fun vidaPorMinuto() {

@@ -71,16 +71,11 @@ fun TelaProgresso(modifier: Modifier) {
             CampoNumero("Stat desejado", statMeta, Modifier.weight(1f)) { statMeta = it }
         }
         Escolha("Como vai treinar", Ritmo.entries, ritmo, { it.rotulo }) { ritmo = it }
-        if (ritmo == Ritmo.POWER) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Mobs juntos:", Modifier.weight(1f))
-                FilledTonalButton(onClick = { if (mobs > 1) mobs-- }) { Text("−") }
-                Text("$mobs", style = MaterialTheme.typography.titleMedium)
-                FilledTonalButton(onClick = { if (mobs < 8) mobs++ }) { Text("+") }
-            }
-        }
         if (ritmo != Ritmo.OFFLINE) {
             Escolha("Bônus de exp", BONUS, bonus, ::rotuloBonus) { bonus = it }
+            Text("Estamina verde = 2× (wiki).", style = MaterialTheme.typography.bodySmall)
+        }
+        if (ritmo == Ritmo.NORMAL) {
             CampoNumero("Seus ticks por hora (opcional)", meusTicks, Modifier.fillMaxWidth()) { meusTicks = it }
             Text(
                 "Vazio = considera o máximo possível. Pra um número mais real, use o \"Ticks por hora\" da tela Onde treinar.",
@@ -97,13 +92,14 @@ fun TelaProgresso(modifier: Modifier) {
             val ticks = Progressao.ticksEntre(de, ate)
             val porHora = when (ritmo) {
                 Ritmo.OFFLINE -> Ticks.OFFLINE_POR_HORA
-                else -> (meusTicks.toDoubleOrNull()?.takeIf { it > 0 }
-                    ?: Ticks.teto(if (ritmo == Ritmo.POWER) mobs else 1)) * bonus
+                else -> (meusTicks.toDoubleOrNull()?.takeIf { it > 0 } ?: Ticks.teto(1)) * bonus
             }
             Resultado {
                 Linha("Ticks necessários", milhar(ticks))
-                Linha("Ritmo", "${milhar(porHora)} ticks/h")
-                Linha("Tempo", horasEMinutos(Progressao.horas(ticks, porHora)))
+                if (ritmo != Ritmo.POWER) {
+                    Linha("Ritmo", "${milhar(porHora)} ticks/h")
+                    Linha("Tempo", horasEMinutos(Progressao.horas(ticks, porHora)))
+                }
                 if (de <= 54 && ate >= 55) {
                     Text(
                         "🔶 Passa do stat 54 pro 55, onde a fórmula da comunidade muda de curva. " +
@@ -112,7 +108,7 @@ fun TelaProgresso(modifier: Modifier) {
                     )
                 }
             }
-            if (ritmo == Ritmo.POWER) PainelPocoes(ticks, porHora, mobs, bonus)
+            if (ritmo == Ritmo.POWER) PainelPocoes(ticks, bonus)
         }
 
         HorizontalDivider()

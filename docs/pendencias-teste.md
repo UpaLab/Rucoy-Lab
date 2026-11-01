@@ -17,6 +17,11 @@
 | Cooldown da Greater e da Super | **1,25 s** e **1,65 s** (mudou na versão 1.22; antes era 1,5 s e 2,0 s) | notas oficiais em rucoyonline.com/news |
 | Preço das poções | 50 / 150 / 350 / 650 gold (básica / Greater / Super / Ultimate) | wiki (Supplies Merchant) |
 | Tomar a poção básica no ritmo do cooldown mantém os especiais | sim | observação do dono; bate com a conta (100 de mana por segundo > 50 por segundo do especial) |
+| **Golpes normais sem dano contam tick** quando o especial dá dano (a regra do "1 a cada 10") | sim: no teste B sobraram ~87 ticks que os especiais não explicam | testes A e B do dono, 01/11/2026 |
+| Ticks do especial | ≈ **1 por mob atingido** (sem bônus). Teste A: ~4,8 por especial com bônus 2× e 2–3 mobs | teste A |
+| Intervalo entre especiais (só especial) | **~1,45 s** (145 s para 100 especiais) | teste A |
+| Mobs atingidos por especial | **2 a 3 em média**, mesmo puxando 4, porque eles morrem | teste A |
+| Mana por poção básica no teste | **~93** (dentro da faixa 70–130 da wiki) | teste A |
 
 ---
 
@@ -82,29 +87,39 @@ Em aberto:
   veja quanto perdeu. Mande junto: mob, quantos mobs batiam em você, sua classe, level, defense e
   armadura.
 
-## 5b. Quantos ticks rende cada especial
+## 5b. Power training: resultados dos testes A e B ✅ (com ressalvas)
 
-A estimativa de poções depende disso mais do que de qualquer outra coisa.
+Condições: melee, stat 98/99, arma de treino, ninjas, **bônus de exp ativo**. Tempo medido pela estamina e
+avanço do stat estimado pelo tamanho da barra, então os números são **aproximados**.
 
-- **Hipótese atual (do Mims):** cada especial rende **1 tick por mob atingido**, até 5, vezes o bônus de exp.
-  Então, com 4 mobs, cada poção básica (≈ 2 especiais) rende ≈ 8 ticks.
-- **Dúvidas:**
-  - O archer acerta **no máximo 3 mobs** no especial (wiki). Isso limita os ticks do archer a 3 por especial?
-  - Os golpes normais entre um especial e outro também dão ticks? Se sim, gasta menos poção por tick.
-  - O bônus de exp multiplica os ticks do especial?
-- **O que o dono lembra (impreciso):** melee, adaga de treino, 4 ninjas, power training do stat ~72 até
-  ~89/90 com **~400 poções básicas ou menos**, 1 especial a cada **~1,5 s**, bônus de exp em parte do tempo.
-  O golpe normal **não causa dano** nos ninjas com a arma de treino. Pela conta atual, seriam ~1.450 poções.
-  Pra dar ~400, cada especial teria que render **~14 ticks**, e não 4.
-- **Hipótese principal:** os golpes normais entre os especiais contam tick mesmo sem dano, desde que 1 a cada
-  10 cause dano. Modelo completo e o que calibrar: [`modelo-golpes-liberados.md`](modelo-golpes-liberados.md).
-- **Testes combinados** (melee, 4 mobs, arma de treino, de preferência sem bônus de exp):
-  - **Teste A:** 100 especiais no ritmo normal. Anotar o stat com a porcentagem antes e depois, as poções
-    usadas e o tempo.
-  - **Teste B:** alternar 1 especial e ~9 golpes normais por uns 3 minutos. Anotar o stat com a porcentagem
-    antes e depois, quantos especiais, as poções e o tempo.
-  - **Teste C (opcional, controle):** 1 minuto só de golpes normais nos ninjas, sem especial. Pela hipótese,
-    não deveria subir nada.
+| | Teste A (só especial) | Teste B (1 especial + ~9 golpes) |
+|---|---|---|
+| Tempo | ~145 s | ~91 s |
+| Especiais | 100 | ~9,4 (calculado pela mana: 3 poções × ~93 + 190 da barra = ~470 ÷ 50) |
+| Poções básicas | 50 | 3 |
+| Stat | 98 (93%) → 99 (44%) | 99 (44%) → 99 (58%) |
+| Ticks ganhos (pela curva da comunidade: ~924 no ponto 98, ~942 no 99) | **~479** | **~132** |
+| Ticks por especial (com bônus) | **~4,8** | — |
+| Ticks por hora | ~11.900 | ~5.200 |
+| Ticks por poção | ~10 | ~26 |
+
+**Conclusões:**
+- ✅ Os golpes normais **contam** tick sem dar dano, desde que o especial dê dano. No teste B, os ~9 especiais
+  explicam ~45 ticks; os outros **~87** vieram dos ~82 golpes normais.
+- ✅ O especial rende **~1 tick por mob atingido** (4,8 ÷ 2 de bônus ÷ ~2,4 mobs).
+- ✅ **Rápido** (só especial) sobe o stat ~2,3× mais rápido. **Econômico** (especial + golpes) gasta ~2,6×
+  menos poção por tick.
+
+**Em aberto:**
+- 🔶 **O bônus vale nos golpes normais?** Se o bônus dobra tudo, cada golpe vale **~0,5 tick**. Se o bônus
+  não vale nos golpes, cada golpe vale **~1 tick**. O app usa 0,5 (editável). **Como testar:** repetir o
+  teste B **sem bônus**.
+- **Qual é o bônus "online"?** A wiki diz que a **estamina verde** (mais de 24 h) faz os stats subirem
+  **2×**. O site oficial só confirma que, quando a estamina acaba, você para de ganhar exp. O app oferece
+  1×, 1,5×, 2× e 2,5×.
+- **Mobs se esgotam:** a wiki diz que cada mob só dá stat por **7 min 30 s** e depois leva **1 hora** pra
+  voltar (morrer não reseta). Treinos longos precisam trocar de mob ou de lugar. Isso ainda não entra no app.
+- Repetir os testes com outros stats, armas e mobs, pra ver se os números se mantêm.
 
 ## 6. Outros pontos em aberto (menor prioridade)
 

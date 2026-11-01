@@ -1,7 +1,10 @@
 # Modelo proposto: golpes normais "liberados" pelo especial
 
-> **Proposta. A conta do app NÃO mudou.** Este documento explica como ela ficaria se a hipótese for
-> confirmada e quais números os testes A e B vão calibrar.
+> **Atualização (01/11/2026): os testes A e B confirmaram a hipótese e o modelo está no app** (tela
+> Progresso → Power: Rápido × Econômico). Resultados em `pendencias-teste.md`, seção 5b.
+>
+> Valores calibrados: 2,5 mobs atingidos, 1,45 s entre especiais, 1 tick por mob no especial, 9 golpes entre
+> especiais, 0,5 tick por golpe (🔶 supondo que o bônus dobra tudo), ~1 s por golpe.
 
 ## A hipótese, em linguagem simples
 

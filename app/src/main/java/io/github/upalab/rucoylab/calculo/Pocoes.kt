@@ -12,7 +12,6 @@
 package io.github.upalab.rucoylab.calculo
 
 import kotlin.math.ceil
-import kotlin.math.min
 
 /** Um tipo de poção, com os valores padrão e de onde eles vieram. */
 data class TipoPocao(
@@ -63,58 +62,9 @@ data class AjusteMana(
     }
 }
 
-data class PlanoMana(
-    val especiais: Double,
-    val manaTotal: Double,
-    val manaDaRegeneracao: Double,
-    val pocoes: Long,
-    val gold: Long,
-    /** Horas no ritmo pedido. */
-    val horas: Double,
-    val pocoesPorMinuto: Double,
-    val maxPocoesPorMinuto: Double,
-    /** O cooldown não deixa tomar poção rápido o bastante para esse ritmo. */
-    val limitadoPeloCooldown: Boolean,
-    /** Se limitado: horas de verdade, no ritmo que a mana aguenta. */
-    val horasReais: Double,
-)
-
 data class PlanoVida(val pocoes: Long, val gold: Long, val pocoesPorMinuto: Double, val limitadoPeloCooldown: Boolean)
 
 object Pocoes {
-
-    /** Ticks que cada especial rende: 1 por mob atingido (até o limite de 5 que contam), vezes o bônus de exp. */
-    fun ticksPorEspecial(mobs: Int, bonusExp: Double): Double =
-        mobs.coerceIn(1, Ticks.MAX_MOBS_QUE_CONTAM) * bonusExp.coerceAtLeast(1.0)
-
-    fun planoMana(ticks: Double, ticksPorHora: Double, mobs: Int, bonusExp: Double, a: AjusteMana): PlanoMana {
-        val porEspecial = ticksPorEspecial(mobs, bonusExp)
-        val especiais = ticks / porEspecial
-        val horas = Progressao.horas(ticks, ticksPorHora)
-        val segundos = horas * 3600
-
-        val manaTotal = especiais * a.manaPorEspecial
-        val regen = min(manaTotal, a.regenPorSegundo.coerceAtLeast(0.0) * segundos)
-        val pocoes = if (a.recupera > 0) ceil((manaTotal - regen) / a.recupera).toLong() else 0L
-
-        val porMinuto = if (horas > 0) pocoes / (horas * 60) else 0.0
-        val maxPorMinuto = if (a.cooldownSeg > 0) 60 / a.cooldownSeg else Double.POSITIVE_INFINITY
-        val limitado = porMinuto > maxPorMinuto
-
-        // Se o cooldown limita: a mana que entra por segundo define quantos especiais dá pra soltar.
-        val horasReais = if (!limitado) horas else {
-            val manaPorSegundo = a.recupera / a.cooldownSeg + a.regenPorSegundo
-            val especiaisPorSegundo = manaPorSegundo / a.manaPorEspecial
-            especiais / especiaisPorSegundo / 3600
-        }
-
-        return PlanoMana(
-            especiais = especiais, manaTotal = manaTotal, manaDaRegeneracao = regen,
-            pocoes = pocoes, gold = (pocoes * a.preco).toLong(), horas = horas,
-            pocoesPorMinuto = porMinuto, maxPocoesPorMinuto = maxPorMinuto,
-            limitadoPeloCooldown = limitado, horasReais = horasReais,
-        )
-    }
 
     /**
      * ESTIMATIVA de poções de vida: depende de quanto você apanha, que muda com o mob, a sua defesa e
