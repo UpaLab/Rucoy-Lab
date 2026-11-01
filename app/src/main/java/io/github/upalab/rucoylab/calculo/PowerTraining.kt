@@ -24,20 +24,22 @@ data class ParametrosPower(
     val intervaloEspecial: Double = INTERVALO_MEDIDO,
     /** Golpes normais depois de cada especial no estilo Econômico. Teste B: ~9. */
     val golpesEntreEspeciais: Int = GOLPES_MEDIDO,
-    /** Ticks por mob atingido pelo especial, sem bônus. Teste A: ≈ 1. */
-    val ticksPorMob: Double = 1.0,
-    /** Ticks por golpe normal sem dano, sem bônus. 🔶 Teste B: ≈ 0,5 SE o bônus dobra tudo; ≈ 1 se não. */
+    /** Ticks por mob atingido pelo especial, SEM bônus. Teste A: 4,8 por especial ÷ 2,5 de bônus ÷ 2,5 mobs. */
+    val ticksPorMob: Double = TICKS_POR_MOB_MEDIDO,
+    /** Ticks por golpe normal sem dano, SEM bônus. 🔶 Teste B: ~1,06 com bônus ÷ 2,5 (se o bônus vale nos golpes). */
     val ticksPorGolpe: Double = TICKS_POR_GOLPE_MEDIDO,
     /** Segundos por golpe normal. Teste B: 91 s ÷ (~9,4 × 10) ≈ 0,97. */
     val segundosPorGolpe: Double = 1.0,
-    /** Multiplicador do bônus de exp (estamina verde = 2×, pela wiki). */
+    /** Multiplicador total do bônus de exp (ver [Bonus]). */
     val bonus: Double = 1.0,
 ) {
     companion object {
         const val MOBS_MEDIDO = 2.5
         const val INTERVALO_MEDIDO = 1.45
         const val GOLPES_MEDIDO = 9
-        const val TICKS_POR_GOLPE_MEDIDO = 0.5
+        /** Calibrados supondo bônus total de [Bonus.DOS_TESTES_A_B] (2,5×) nos testes. 🔶 */
+        const val TICKS_POR_MOB_MEDIDO = 0.77
+        const val TICKS_POR_GOLPE_MEDIDO = 0.42
 
         /** Pela regra do "1 a cada 10", só contam até 9 golpes depois de cada especial. */
         const val MAX_GOLPES_LIBERADOS = 9

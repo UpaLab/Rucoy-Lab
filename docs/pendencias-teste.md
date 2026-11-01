@@ -22,6 +22,9 @@
 | Intervalo entre especiais (só especial) | **~1,45 s** (145 s para 100 especiais) | teste A |
 | Mobs atingidos por especial | **2 a 3 em média**, mesmo puxando 4, porque eles morrem | teste A |
 | Mana por poção básica no teste | **~93** (dentro da faixa 70–130 da wiki) | teste A |
+| **Mob cansa** ("this monster is exhausted"): cada mob só dá stat por ~7 min 30 s. Vale **por indivíduo**: outros do mesmo tipo continuam dando stat | sim, de forma aproximada (Assassins duravam mais de 5 min sem morrer com melee ~70–80) | wiki + observação do dono |
+| Estamina verde (24 h ou mais) | **+50%** de exp de level e skill (**1,5×**, e não 2× como dizia a wiki) | notas oficiais, update 1.21 |
+| Bônus de treino online ("120 minutes of bonus…") | **2×** de exp de skill; 2 h a cada 24 h, com estamina própria | notas oficiais, update 1.25 |
 
 ---
 
@@ -110,15 +113,37 @@ avanço do stat estimado pelo tamanho da barra, então os números são **aproxi
 - ✅ **Rápido** (só especial) sobe o stat ~2,3× mais rápido. **Econômico** (especial + golpes) gasta ~2,6×
   menos poção por tick.
 
+**Bônus durante os testes:** a estamina estava em **26:00:00 verde** e também apareceu **"You have 120 minutes
+of bonus level and skill experience"**. São **dois bônus diferentes** (notas oficiais):
+
+| Bônus | Quanto | Fonte |
+|---|---|---|
+| Estamina verde (24 h ou mais) | +50% (1,5×) | update 1.21 |
+| Treino online (2 h por dia) | 2× de skill | update 1.25 |
+| **Os dois juntos** | 🔶 **2,5× (se somam) ou 3× (se multiplicam)**: o oficial não diz | o Mims oferece 1,5×/2×/2,5×, o que sugere soma |
+
+**Recalibração (01/11/2026):** antes a gente supunha 2× nos testes. Agora o app supõe **2,5×** (soma), e os
+valores **sem bônus** ficaram:
+- especial: **~0,77 tick por mob atingido** (4,8 ÷ 2,5 ÷ 2,5 mobs). Se os mobs atingidos foram mais perto de 2,
+  dá ~0,96;
+- golpe normal: **~0,42 tick** (1,06 ÷ 2,5), se o bônus vale nos golpes.
+
+O app continua reproduzindo os testes A e B com 2,5×. O multiplicador total é editável na tela.
+
 **Em aberto:**
-- 🔶 **O bônus vale nos golpes normais?** Se o bônus dobra tudo, cada golpe vale **~0,5 tick**. Se o bônus
-  não vale nos golpes, cada golpe vale **~1 tick**. O app usa 0,5 (editável). **Como testar:** repetir o
-  teste B **sem bônus**.
-- **Qual é o bônus "online"?** A wiki diz que a **estamina verde** (mais de 24 h) faz os stats subirem
-  **2×**. O site oficial só confirma que, quando a estamina acaba, você para de ganhar exp. O app oferece
-  1×, 1,5×, 2× e 2,5×.
-- **Mobs se esgotam:** a wiki diz que cada mob só dá stat por **7 min 30 s** e depois leva **1 hora** pra
-  voltar (morrer não reseta). Treinos longos precisam trocar de mob ou de lugar. Isso ainda não entra no app.
+- 🔶 **Os dois bônus somam ou multiplicam?** E o **bônus de treino online vale nos golpes normais** sem dano?
+- **Teste que separa os dois (combinado):** repetir o **teste B** (1 especial + ~9 golpes, melee, arma de
+  treino, ninjas) **depois que os 120 minutos acabarem**, ainda com a **estamina verde**. Assim só fica o
+  bônus de 1,5×. Anotar o mesmo de antes: stat com porcentagem antes e depois, especiais, poções e tempo.
+  Pra diminuir o erro da barra, vale fazer **mais tempo (5 min ou mais)**.
+  - Se os dois **somavam** (2,5×): o mesmo ritmo deve render **~60%** dos ticks do teste B original.
+  - Se **multiplicavam** (3×): deve render **~50%**.
+  - Se o online **não valia nos golpes**: a parte dos golpes quase não muda, e só a dos especiais cai.
+  - Se der pra repetir também com a **estamina branca** (menos de 24 h) e sem o online, sai o valor **sem bônus**.
+- **Mob cansado: matar e renascer zera?** A wiki diz que **não** (o mob renasce ainda cansado e leva 1 hora pra
+  voltar), mas isso não foi conferido. **Como testar:** num mob que já cansou, matar, esperar renascer e ver
+  se a mensagem volta logo no primeiro golpe.
+- **Quanto tempo se perde trocando de mob:** o app usa **15 s** a cada 7 min 30 s (suposição, editável).
 - Repetir os testes com outros stats, armas e mobs, pra ver se os números se mantêm.
 
 ## 6. Outros pontos em aberto (menor prioridade)

@@ -50,10 +50,10 @@ import java.util.Locale
 private const val PREFS = "pocoes"
 private val pt = Locale.forLanguageTag("pt-BR")
 
-private fun Double.texto(): String =
+fun Double.texto(): String =
     if (this % 1.0 == 0.0) this.toLong().toString() else String.format(pt, "%.2f", this).trimEnd('0')
 
-private fun String.numero(): Double? = replace(',', '.').toDoubleOrNull()
+fun String.numero(): Double? = replace(',', '.').toDoubleOrNull()
 
 /** Campo de número que aceita vírgula (ex.: 1,25). */
 @Composable
@@ -94,7 +94,7 @@ private fun <T> Lista(rotulo: String, opcoes: List<T>, atual: T, nome: (T) -> St
  * com mana, poções e gold. Tudo editável. [ticks] vem da tela Progresso.
  */
 @Composable
-fun PainelPocoes(ticks: Double, bonus: Double) {
+fun PainelPocoes(ticks: Double, bonus: Double, fatorCansaco: Double = 1.0) {
     val contexto = LocalContext.current
     val prefs = remember { contexto.getSharedPreferences(PREFS, Context.MODE_PRIVATE) }
     val listaMobs = remember { Mobs.carregar(contexto).sortedBy { it.level } }
@@ -147,7 +147,7 @@ fun PainelPocoes(ticks: Double, bonus: Double) {
     val economico = PowerTraining.plano(Estilo.ECONOMICO, ticks, params, ajuste)
     val perde = vidaPorMin.numero()
     fun vida(pl: PlanoEstilo?) = if (pl == null || perde == null) null
-        else Pocoes.planoVida(perde, pl.horas, recuperaVida.numero() ?: 0.0, precoVida.numero() ?: 0.0, tv.cooldownSeg)
+        else Pocoes.planoVida(perde, pl.horas * fatorCansaco, recuperaVida.numero() ?: 0.0, precoVida.numero() ?: 0.0, tv.cooldownSeg)
 
     // ---- Comparação ----
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
@@ -162,7 +162,7 @@ fun PainelPocoes(ticks: Double, bonus: Double) {
             } else {
                 val vr = vida(rapido); val ve = vida(economico)
                 Comparacao("", "Rápido", "Econômico", negrito = true)
-                Comparacao("Tempo", horasEMinutos(rapido.horas), horasEMinutos(economico.horas))
+                Comparacao("Tempo", horasEMinutos(rapido.horas * fatorCansaco), horasEMinutos(economico.horas * fatorCansaco))
                 Comparacao("Ticks/h", milhar(rapido.ticksPorHora), milhar(economico.ticksPorHora))
                 Comparacao("Especiais", milhar(rapido.especiais), milhar(economico.especiais))
                 Comparacao("Poções de mana", milhar(rapido.pocoes.toDouble()), milhar(economico.pocoes.toDouble()))
@@ -175,7 +175,8 @@ fun PainelPocoes(ticks: Double, bonus: Double) {
                     Text("⚠️ O cooldown da poção limita o ritmo (o tempo acima já considera isso).", fontWeight = FontWeight.Bold)
                 }
                 Text(
-                    "🔶 Calibrado com os seus testes A e B (stat 98–99, arma de treino, ninjas, com bônus). " +
+                    (if (fatorCansaco > 1) "Tempo inclui as paradas pra trocar de mob cansado. " else "") +
+                    "🔶 Calibrado com os seus testes A e B (stat 98–99, arma de treino, ninjas), supondo bônus total de 2,5× neles. " +
                         "Em outros stats, armas e mobs pode mudar.",
                     style = MaterialTheme.typography.bodySmall,
                 )

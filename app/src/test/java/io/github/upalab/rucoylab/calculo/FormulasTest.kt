@@ -120,19 +120,19 @@ class FormulasTest {
     private val basica get() = AjusteMana.de(TiposPocao.MANA[0])
     private fun ticksDoPonto(s: Int) = Progressao.ticksDoPonto(s)
 
-    /** Teste A do dono: 100 especiais em ~145 s, 50 poções, de 98 (93%) a 99 (44%), bônus 2×. */
+    /** Teste A do dono: 100 especiais em ~145 s, 50 poções, de 98 (93%) a 99 (44%), bônus suposto 2,5×. */
     @Test fun reproduzTesteA() {
         val ganhou = 0.07 * ticksDoPonto(98) + 0.44 * ticksDoPonto(99)   // ≈ 479 ticks
-        val p = PowerTraining.plano(Estilo.RAPIDO, ganhou, ParametrosPower(bonus = 2.0), basica)!!
+        val p = PowerTraining.plano(Estilo.RAPIDO, ganhou, ParametrosPower(bonus = Bonus.DOS_TESTES_A_B), basica)!!
         assertEquals(100.0, p.especiais, 6.0)          // ~100 especiais
         assertEquals(145.0, p.horas * 3600, 10.0)      // ~145 s
         assertEquals(50.0, p.pocoes.toDouble(), 5.0)   // ~50 poções
     }
 
-    /** Teste B do dono: ~91 s, ~9,4 especiais, 3 poções + 190 de mana da barra, de 99 (44%) a 99 (58%), bônus 2×. */
+    /** Teste B do dono: ~91 s, ~9,4 especiais, 3 poções + 190 de mana da barra, de 99 (44%) a 99 (58%), bônus suposto 2,5×. */
     @Test fun reproduzTesteB() {
         val ganhou = 0.14 * ticksDoPonto(99)                              // ≈ 132 ticks
-        val p = PowerTraining.plano(Estilo.ECONOMICO, ganhou, ParametrosPower(bonus = 2.0), basica)!!
+        val p = PowerTraining.plano(Estilo.ECONOMICO, ganhou, ParametrosPower(bonus = Bonus.DOS_TESTES_A_B), basica)!!
         assertEquals(9.4, p.especiais, 1.0)
         assertEquals(91.0, p.horas * 3600, 10.0)
         assertEquals(470.0, p.manaTotal, 50.0)
@@ -238,4 +238,18 @@ class FormulasTest {
         }
         assertTrue("Diferenças:\n" + erros.take(10).joinToString("\n"), erros.isEmpty())
     }
+
+    @Test fun bonusOficiais() {
+        assertEquals(1.0, Bonus.sugerido(false, false), d)
+        assertEquals(1.5, Bonus.sugerido(true, false), d)   // estamina verde: +50% (oficial 1.21)
+        assertEquals(2.0, Bonus.sugerido(false, true), d)   // treino online: 2× (oficial 1.25)
+        assertEquals(2.5, Bonus.sugerido(true, true), d)    // 🔶 soma suposta
+    }
+
+    @Test fun cansacoDoMob() {
+        assertTrue(Cansaco.cansaAntesDeMorrer(451.0))
+        assertTrue(!Cansaco.cansaAntesDeMorrer(300.0))
+        assertEquals(1.0 + 15.0 / 450, Cansaco.fatorTempo(15.0), d)
+    }
+
 }

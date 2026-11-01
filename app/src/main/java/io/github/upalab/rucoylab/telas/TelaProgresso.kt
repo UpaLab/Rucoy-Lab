@@ -18,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import io.github.upalab.rucoylab.calculo.Bonus
+import io.github.upalab.rucoylab.calculo.Cansaco
 import io.github.upalab.rucoylab.calculo.Progressao
 import io.github.upalab.rucoylab.calculo.Ticks
 
@@ -38,8 +41,6 @@ private const val PREFS = "progresso"
 
 enum class Ritmo(val rotulo: String) { NORMAL("Normal"), POWER("Power"), OFFLINE("Offline") }
 
-private val BONUS = listOf(1.0, 1.5, 2.0, 2.5)
-private fun rotuloBonus(b: Double) = if (b == 1.0) "Sem" else "${b.toString().replace('.', ',').removeSuffix(",0")}×"
 
 @Composable
 fun TelaProgresso(modifier: Modifier) {
@@ -49,15 +50,20 @@ fun TelaProgresso(modifier: Modifier) {
     var statMeta by rememberSaveable { mutableStateOf(prefs.getString("statMeta", "") ?: "") }
     var ritmo by rememberSaveable { mutableStateOf(Ritmo.entries[prefs.getInt("ritmo", 0)]) }
     var mobs by rememberSaveable { mutableStateOf(prefs.getInt("mobs", 4)) }
-    var bonus by rememberSaveable { mutableStateOf(prefs.getFloat("bonus", 1f).toDouble()) }
+    var verde by rememberSaveable { mutableStateOf(prefs.getBoolean("verde", false)) }
+    var online by rememberSaveable { mutableStateOf(prefs.getBoolean("online", false)) }
+    var bonusTotal by rememberSaveable { mutableStateOf(prefs.getString("bonusTotal", "1") ?: "1") }
+    var revezar by rememberSaveable { mutableStateOf(prefs.getBoolean("revezar", false)) }
+    var troca by rememberSaveable { mutableStateOf(prefs.getString("troca", "15") ?: "15") }
     var meusTicks by rememberSaveable { mutableStateOf(prefs.getString("meusTicks", "") ?: "") }
     var levelAtual by rememberSaveable { mutableStateOf(prefs.getString("levelAtual", "") ?: "") }
     var levelMeta by rememberSaveable { mutableStateOf(prefs.getString("levelMeta", "") ?: "") }
     var expHora by rememberSaveable { mutableStateOf(prefs.getString("expHora", "") ?: "") }
 
-    LaunchedEffect(statAtual, statMeta, ritmo, mobs, bonus, meusTicks, levelAtual, levelMeta, expHora) {
+    LaunchedEffect(statAtual, statMeta, ritmo, verde, online, bonusTotal, revezar, troca, meusTicks, levelAtual, levelMeta, expHora) {
         prefs.edit().putString("statAtual", statAtual).putString("statMeta", statMeta).putInt("ritmo", ritmo.ordinal)
-            .putInt("mobs", mobs).putFloat("bonus", bonus.toFloat()).putString("meusTicks", meusTicks)
+            .putBoolean("verde", verde).putBoolean("online", online).putString("bonusTotal", bonusTotal)
+            .putBoolean("revezar", revezar).putString("troca", troca).putString("meusTicks", meusTicks)
             .putString("levelAtual", levelAtual).putString("levelMeta", levelMeta).putString("expHora", expHora).apply()
     }
 
@@ -72,8 +78,24 @@ fun TelaProgresso(modifier: Modifier) {
         }
         Escolha("Como vai treinar", Ritmo.entries, ritmo, { it.rotulo }) { ritmo = it }
         if (ritmo != Ritmo.OFFLINE) {
-            Escolha("Bônus de exp", BONUS, bonus, ::rotuloBonus) { bonus = it }
-            Text("Estamina verde = 2× (wiki).", style = MaterialTheme.typography.bodySmall)
+            Text("Bônus de exp", style = MaterialTheme.typography.labelLarge)
+            Chave("Estamina verde (24 h ou mais): +50%", verde) { verde = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
+            Chave("Bônus de treino online (2 h por dia): 2×", online) { online = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
+            CampoDecimal("Multiplicador total", bonusTotal, Modifier.fillMaxWidth()) { bonusTotal = it }
+            Text(
+                "Oficial (notas 1.21 e 1.25): estamina verde = +50%; treino online = 2× de skill. " +
+                    "🔶 Não sabemos se os dois juntos somam (2,5×) ou multiplicam (3×). O app sugere a soma; você pode mudar.",
+                style = MaterialTheme.typography.bodySmall,
+            )
+            Chave("Revezar mobs (o mob cansa antes de morrer)", revezar) { revezar = it }
+            if (revezar) {
+                CampoNumero("Segundos pra trocar de mob", troca, Modifier.fillMaxWidth()) { troca = it }
+                Text(
+                    "Cada mob só dá stat por 7 min 30 s. 🔶 Suposição simples: a cada 7 min 30 s você perde esses segundos " +
+                        "trocando de mob (padrão 15 s, sem fonte). Ligue se a tela Onde treinar avisar que o mob cansa.",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
         if (ritmo == Ritmo.NORMAL) {
             CampoNumero("Seus ticks por hora (opcional)", meusTicks, Modifier.fillMaxWidth()) { meusTicks = it }
@@ -83,6 +105,8 @@ fun TelaProgresso(modifier: Modifier) {
             )
         }
 
+        val bonus = bonusTotal.numero()?.takeIf { it > 0 } ?: 1.0
+        val fatorCansaco = if (revezar && ritmo != Ritmo.OFFLINE) Cansaco.fatorTempo(troca.toDoubleOrNull() ?: 0.0) else 1.0
         val de = statAtual.toIntOrNull(); val ate = statMeta.toIntOrNull()
         if (de == null || ate == null || de < 1) {
             Text("Preencha o stat atual e o desejado.")
@@ -98,7 +122,8 @@ fun TelaProgresso(modifier: Modifier) {
                 Linha("Ticks necessários", milhar(ticks))
                 if (ritmo != Ritmo.POWER) {
                     Linha("Ritmo", "${milhar(porHora)} ticks/h")
-                    Linha("Tempo", horasEMinutos(Progressao.horas(ticks, porHora)))
+                    Linha("Tempo", horasEMinutos(Progressao.horas(ticks, porHora) * fatorCansaco))
+                    if (fatorCansaco > 1) Text("Inclui as paradas pra trocar de mob cansado.", style = MaterialTheme.typography.bodySmall)
                 }
                 if (de <= 54 && ate >= 55) {
                     Text(
@@ -108,7 +133,7 @@ fun TelaProgresso(modifier: Modifier) {
                     )
                 }
             }
-            if (ritmo == Ritmo.POWER) PainelPocoes(ticks, bonus)
+            if (ritmo == Ritmo.POWER) PainelPocoes(ticks, bonus, fatorCansaco)
         }
 
         HorizontalDivider()
@@ -148,5 +173,13 @@ fun horasEMinutos(horas: Double): String {
         if (d > 0) append("${d}d ")
         if (d > 0 || h > 0) append("${h}h ")
         append("${m}min")
+    }
+}
+
+@Composable
+private fun Chave(texto: String, ligado: Boolean, mudar: (Boolean) -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(texto, Modifier.weight(1f))
+        Switch(checked = ligado, onCheckedChange = mudar)
     }
 }

@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import io.github.upalab.rucoylab.calculo.Cansaco
 import io.github.upalab.rucoylab.calculo.Classe
 import io.github.upalab.rucoylab.calculo.Combate
 import io.github.upalab.rucoylab.calculo.Modo
@@ -151,6 +152,17 @@ private fun CartaoResultado(s: Sugestao, modo: Modo) {
             Linha("Ticks por hora", "${milhar(r.ticksPorHora)} / ${milhar(s.teto)}")
             Linha(if (modo == Modo.NORMAL) "Dano (normal)" else "Dano (especial)", "${milhar(r.golpe.menor)} – ${milhar(r.golpe.maior)}")
             Linha("Tempo médio pra matar", tempo(r.segundosParaMatar))
+            if (modo == Modo.NORMAL && Cansaco.cansaAntesDeMorrer(r.segundosParaMatar)) {
+                Text(
+                    "⚠️ Esse mob deve CANSAR antes de morrer: cada mob só dá stat por 7 min 30 s. " +
+                        "Reveze entre mobs (os outros do mesmo tipo continuam dando stat normalmente).",
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    "Wiki + observação do dono. 🔶 Em aberto: se matar o mob e ele renascer zera o cansaço.",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
             s.proximo?.let { p ->
                 Text("")
                 Text("Próximo mob: ${p.nomeExibido} (Lv ${p.level})", fontWeight = FontWeight.Bold)
