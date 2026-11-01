@@ -58,6 +58,9 @@ jobs:
           ./gradlew --no-daemon assembleRelease
           mkdir -p saida
           cp app/build/outputs/apk/release/app-release.apk "saida/UpaLab-teste-${{ github.run_number }}.apk"
+          echo "Impressão digital da chave usada (compare com o arquivo de senhas guardado):"
+          "$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)/apksigner" verify --print-certs saida/*.apk \
+            | grep "SHA-256" | sed 's/.*: //' | tr 'a-f' 'A-F' | sed 's/../&:/g; s/:$//'
 
       - name: Gerar APK de debug (sem chave)
         if: steps.chave.outputs.caminho == ''
