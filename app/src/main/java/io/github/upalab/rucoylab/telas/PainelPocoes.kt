@@ -103,6 +103,7 @@ fun PainelPocoes(ticks: Double, ticksPorHora: Double, mobs: Int, bonus: Double) 
     var preco by lembrar(prefs, "preco_$tipoMana", tm.preco.toString())
     var cooldown by lembrar(prefs, "cooldown_$tipoMana", tm.cooldownSeg.texto())
     var regen by lembrar(prefs, "regen", "0")
+    var intervalo by lembrar(prefs, "intervalo", "1,5")
 
     // ---- Vida ----
     var tipoVida by rememberSaveable { mutableStateOf(prefs.getInt("tipoVida", 0)) }
@@ -113,9 +114,9 @@ fun PainelPocoes(ticks: Double, ticksPorHora: Double, mobs: Int, bonus: Double) 
     var recuperaVida by lembrar(prefs, "recuperaVida_$tipoVida", tv.recuperaMedia.texto())
     var precoVida by lembrar(prefs, "precoVida_$tipoVida", tv.preco.toString())
 
-    LaunchedEffect(tipoMana, custo, recupera, preco, cooldown, regen, tipoVida, mobNome, vidaPorMin, recuperaVida, precoVida) {
+    LaunchedEffect(tipoMana, custo, recupera, preco, cooldown, regen, intervalo, tipoVida, mobNome, vidaPorMin, recuperaVida, precoVida) {
         prefs.edit().putInt("tipoMana", tipoMana).putString("custo", custo).putString("recupera_$tipoMana", recupera)
-            .putString("preco_$tipoMana", preco).putString("cooldown_$tipoMana", cooldown).putString("regen", regen)
+            .putString("preco_$tipoMana", preco).putString("cooldown_$tipoMana", cooldown).putString("regen", regen).putString("intervalo", intervalo)
             .putInt("tipoVida", tipoVida).putString("mob", mobNome).putString("vidaPorMin_$mobNome", vidaPorMin)
             .putString("recuperaVida_$tipoVida", recuperaVida).putString("precoVida_$tipoVida", precoVida).apply()
     }
@@ -138,12 +139,34 @@ fun PainelPocoes(ticks: Double, ticksPorHora: Double, mobs: Int, bonus: Double) 
                 CampoDecimal("Cooldown (s)", cooldown, Modifier.weight(1f)) { cooldown = it }
                 CampoDecimal("Mana por especial", custo, Modifier.weight(1f)) { custo = it }
             }
-            CampoDecimal("Regeneração de mana por segundo", regen, Modifier.fillMaxWidth()) { regen = it }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                CampoDecimal("Regeneração de mana/s", regen, Modifier.weight(1f)) { regen = it }
+                CampoDecimal("Intervalo entre especiais (s)", intervalo, Modifier.weight(1f)) { intervalo = it }
+            }
             Text(
-                "Mana por especial: 50, medido por você. Regeneração: sem fonte ainda (padrão 0). " +
+                "Mana por especial: 50, medido por você. Intervalo: 1,5 s, informado por você. " +
+                    "Regeneração: sem fonte ainda (padrão 0). " +
                     "Anel e pingente Soul dão +1 cada (wiki), mas a wiki não diz por quanto tempo.",
                 style = MaterialTheme.typography.bodySmall,
             )
+
+            val iv = intervalo.numero()
+            if (iv != null && iv > 0 && ajuste.manaPorEspecial > 0) {
+                val manaPedida = ajuste.manaPorEspecial / iv
+                val manaPocao = if (ajuste.cooldownSeg > 0) ajuste.recupera / ajuste.cooldownSeg else 0.0
+                Text(
+                    "Nesse intervalo: ${String.format(pt, "%.0f", 60 / iv)} especiais por minuto, pedindo " +
+                        "${String.format(pt, "%.0f", manaPedida)} de mana/s. A poção escolhida dá até " +
+                        "${String.format(pt, "%.0f", manaPocao + ajuste.regenPorSegundo)} de mana/s" +
+                        (if (manaPocao + ajuste.regenPorSegundo >= manaPedida) " ✅ aguenta." else " ⚠️ não aguenta."),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Text(
+                    "🔶 O intervalo ainda NÃO entra na conta de poções: estamos testando se os golpes normais entre " +
+                        "um especial e outro também dão ticks (ver docs/modelo-golpes-liberados.md).",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
 
             val p = Pocoes.planoMana(ticks, ticksPorHora, mobs, bonus, ajuste)
             HorizontalDivider()

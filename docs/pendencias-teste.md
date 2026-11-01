@@ -92,8 +92,19 @@ A estimativa de poções depende disso mais do que de qualquer outra coisa.
   - O archer acerta **no máximo 3 mobs** no especial (wiki). Isso limita os ticks do archer a 3 por especial?
   - Os golpes normais entre um especial e outro também dão ticks? Se sim, gasta menos poção por tick.
   - O bônus de exp multiplica os ticks do especial?
-- **Como testar:** anotar o **stat (com a porcentagem)** antes e depois de **100 especiais** contados, com o
-  número de mobs atingidos. Assim dá pra calcular quantos ticks cada especial rendeu.
+- **O que o dono lembra (impreciso):** melee, adaga de treino, 4 ninjas, power training do stat ~72 até
+  ~89/90 com **~400 poções básicas ou menos**, 1 especial a cada **~1,5 s**, bônus de exp em parte do tempo.
+  O golpe normal **não causa dano** nos ninjas com a arma de treino. Pela conta atual, seriam ~1.450 poções.
+  Pra dar ~400, cada especial teria que render **~14 ticks**, e não 4.
+- **Hipótese principal:** os golpes normais entre os especiais contam tick mesmo sem dano, desde que 1 a cada
+  10 cause dano. Modelo completo e o que calibrar: [`modelo-golpes-liberados.md`](modelo-golpes-liberados.md).
+- **Testes combinados** (melee, 4 mobs, arma de treino, de preferência sem bônus de exp):
+  - **Teste A:** 100 especiais no ritmo normal. Anotar o stat com a porcentagem antes e depois, as poções
+    usadas e o tempo.
+  - **Teste B:** alternar 1 especial e ~9 golpes normais por uns 3 minutos. Anotar o stat com a porcentagem
+    antes e depois, quantos especiais, as poções e o tempo.
+  - **Teste C (opcional, controle):** 1 minuto só de golpes normais nos ninjas, sem especial. Pela hipótese,
+    não deveria subir nada.
 
 ## 6. Outros pontos em aberto (menor prioridade)
 
