@@ -186,7 +186,7 @@ O power training usa o dano do **especial** (seção 1) para calcular a precisã
 ❗ O power training **pula muitos mobs** (T:1040): índices 13, 19, 20, 22, 24, 25, 26, 29, 31, 33, 36, 37
 e todos a partir do 39. São eles: Skeleton Archer, Drow Ranger, Drow Mage, Drow Sorceress, Lizard Archer,
 Lizard Shaman, Dead Eyes, Lizard High Shaman, Dragon Hatchling, Dragon, Dragon Warden, Ice Elemental,
-Minotaur Lv.275, Ice Dragon, Yeti, Lava Golem, Orthrus e Demon.
+Ice Dragon, Yeti, Lava Golem, Orthrus e Demon. (O Minotaur Lv.275 é o índice 38 e **não** é pulado.)
 🔶 Provavelmente porque mobs que atacam de longe ou chefes não dá pra juntar e bater em grupo. Precisa
 confirmar.
 
