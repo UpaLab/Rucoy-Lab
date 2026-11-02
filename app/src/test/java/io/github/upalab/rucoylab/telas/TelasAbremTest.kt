@@ -52,7 +52,7 @@ class TelasAbremTest {
 
     @Test fun xSoMinimizaEDesligarPedeConfirmacao() {
         var desligou = false
-        regra.setContent { ConteudoBalao(mover = { _, _ -> }, abrirOuFechar = {}, encerrar = { desligou = true }) }
+        regra.setContent { ConteudoBalao(mover = { _, _ -> }, abrirOuFechar = { _, _ -> }, encerrar = { desligou = true }) }
         regra.onNodeWithText("UP").performClick()
         regra.onNodeWithText("✕").performClick()
         regra.onNodeWithText("UP").assertExists()          // voltou pra bolinha
@@ -65,7 +65,7 @@ class TelasAbremTest {
     }
 
     @Test fun balaoAbreCadaFerramenta() {
-        regra.setContent { ConteudoBalao(mover = { _, _ -> }, abrirOuFechar = {}, encerrar = {}) }
+        regra.setContent { ConteudoBalao(mover = { _, _ -> }, abrirOuFechar = { _, _ -> }, encerrar = {}) }
         regra.onNodeWithText("UP").performClick()
         for (nome in listOf("Onde treinar", "Progresso", "Poções", "Defesa", "Mobs")) {
             regra.onNodeWithText(nome).performClick()

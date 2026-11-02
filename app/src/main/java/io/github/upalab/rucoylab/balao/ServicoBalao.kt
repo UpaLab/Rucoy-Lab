@@ -57,6 +57,7 @@ class ServicoBalao : Service(), LifecycleOwner, SavedStateRegistryOwner, ViewMod
     private lateinit var janelas: WindowManager
     private lateinit var params: WindowManager.LayoutParams
     private var vista: ComposeView? = null
+    private var xDaBolinha = 0
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -68,9 +69,10 @@ class ServicoBalao : Service(), LifecycleOwner, SavedStateRegistryOwner, ViewMod
 
         if (!Settings.canDrawOverlays(this)) { stopSelf(); return }
         janelas = getSystemService(WINDOW_SERVICE) as WindowManager
+        val lado = (64 * resources.displayMetrics.density).toInt()  // a bolinha: 56 dp + 4 dp de cada lado
         params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
+            lado,
+            lado,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             FLAGS_FECHADO,
             PixelFormat.TRANSLUCENT,
@@ -99,7 +101,7 @@ class ServicoBalao : Service(), LifecycleOwner, SavedStateRegistryOwner, ViewMod
             CompositionLocalProvider(LocalOnBackPressedDispatcherOwner provides this@ServicoBalao) {
                 key(abertoNoInicio, ferramenta) { ConteudoBalao(
                     mover = { dx, dy -> mover(dx, dy) },
-                    abrirOuFechar = { aberto -> ajustarJanela(aberto) },
+                    abrirOuFechar = { aberto, largura -> ajustarJanela(aberto, largura) },
                     encerrar = { stopSelf() },
                     abertoNoInicio = abertoNoInicio,
                     ferramentaNoInicio = ferramenta,
@@ -131,17 +133,23 @@ class ServicoBalao : Service(), LifecycleOwner, SavedStateRegistryOwner, ViewMod
 
     /**
      * Fechado: só o balão, e a janela não pega o teclado (o jogo continua recebendo tudo).
-     * Aberto: o painel quase da largura da tela; aceita digitar, e toques fora dele vão pro jogo.
+     * Aberto: o painel na largura do tamanho escolhido (P, M ou G); aceita digitar, e toques fora dele vão pro jogo.
      */
-    private fun ajustarJanela(aberto: Boolean) {
+    private fun ajustarJanela(aberto: Boolean, fracaoLargura: Float) {
         val v = vista ?: return
         val largura = resources.displayMetrics.widthPixels
         if (aberto) {
-            params.width = (largura * 0.94).toInt()
+            if (params.flags == FLAGS_FECHADO) xDaBolinha = params.x
+            params.width = (largura * fracaoLargura).toInt()
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT
             params.x = (largura - params.width) / 2
             params.flags = FLAGS_ABERTO
         } else {
-            params.width = WindowManager.LayoutParams.WRAP_CONTENT
+            // Janela do tamanho exato da bolinha (56 dp + 4 dp de cada lado), no lugar onde ela estava.
+            val lado = (64 * resources.displayMetrics.density).toInt()
+            params.width = lado
+            params.height = lado
+            params.x = xDaBolinha.coerceIn(0, (largura - lado).coerceAtLeast(0))
             params.flags = FLAGS_FECHADO
         }
         janelas.updateViewLayout(v, params)
