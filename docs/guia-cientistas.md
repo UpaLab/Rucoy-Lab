@@ -48,15 +48,14 @@ No canal de testes do Discord do UpaLab:
 - esta ficha preenchida (copie e cole):
 
 ```
-Teste: (A, B, C, D… da lista abaixo)
+Teste: (A, B, C… da lista abaixo)
 Classe / level:
 Stat treinado (antes):
 Defense:
 Arma (ataque e +buff):
 Anel / colar:
 Mob e quantos você puxou:
-Estamina: verde ou branca?
-Bônus online ("120 minutes…") estava ativo? sim / não / acabou no meio
+Estamina: verde ou branca? (se mudou no meio, avise)
 Poções usadas (tipo):
 Observações:
 Pode colocar seu nome nos créditos? sim / não — como quer aparecer:
@@ -66,46 +65,44 @@ Pode colocar seu nome nos créditos? sim / não — como quer aparecer:
 
 Em ordem de prioridade. Cada um diz **o que queremos descobrir**.
 
-### A. Power training SEM o bônus online ⭐ (o mais importante)
+### A. Power training com a estamina BRANCA (sem bônus) ⭐ (o mais importante)
 
-- **Descobre:** se o bônus online (valor a descobrir) vale no power training. A estamina verde parece valer
-  1,5× (a wiki diz 2×), e queremos saber se o bônus online soma alguma coisa em cima disso.
-- **Quem consegue:** quem joga mais de 2 horas seguidas no dia. Faça o teste **depois que a mensagem dos
-  120 minutos acabar**, ainda com a **estamina verde**.
-- **Como:** só especial, nos mesmos mobs de sempre, 3 a 5 minutos.
+- **Descobre:** quanto vale um golpe **sem nenhum bônus**. Assim a gente descobre também quanto vale a
+  estamina verde: parece ser **1,5×** (a wiki diz 2×).
+- **Sobre o bônus:** existe **um bônus só**, o da estamina verde. A estamina vai até 26 h; abaixo de 24 h ela
+  fica **branca** (sem bônus). A parte verde são as últimas 2 h, e o jogo mostra quanto resta dela com a
+  mensagem **"You have X minutes of bonus level and skill experience"**.
+- **Quem consegue:** quem joga muitas horas e deixa a estamina cair para **menos de 24 h**. Quem joga pouco
+  não consegue, porque a estamina volta a encher enquanto você está off.
+- **Como:** só especial, nos mesmos mobs de sempre, 3 a 5 minutos. Mostre a estamina branca no começo e no
+  fim.
 
-### B. Power training com a estamina BRANCA
-
-- **Descobre:** quanto vale um golpe **sem nenhum bônus**.
-- **Quem consegue:** quem joga muito e deixa a estamina cair para menos de 24 horas (ela fica branca).
-- **Como:** igual ao A. Se o bônus online ainda estiver ativo, avise na ficha.
-
-### C. Especial + golpes normais
+### B. Especial + golpes normais
 
 - **Descobre:** se o golpe normal (que não dá dano) vale o mesmo que um acerto do especial.
 - **Como:** 1 especial e depois uns 9 golpes normais, repetindo, por 3 a 5 minutos. Melhor com arma de
   treino, em mobs em que o golpe normal não dá dano.
 
-### D. Regeneração natural de vida e de mana
+### C. Regeneração natural de vida e de mana
 
 - **Descobre:** quanto a vida e a mana voltam sozinhas, e de quanto em quanto tempo.
 - **Como:** com a vida e a mana abaixo do máximo, **fique parado**, longe dos mobs e sem tomar poção, por
   1 minuto, com a tela de status aberta. Se tiver, repita com o **colar de vida** e com o **anel de mana**.
 
-### E. Vida perdida por mob
+### D. Vida perdida por mob
 
 - **Descobre:** quanto cada mob tira de vida, para o app calcular as poções de vida.
 - **Como:** treine 2 minutos no seu mob de sempre. No começo e no fim, mostre a **vida** na tela. Conte as
   poções de vida (ou mostre o inventário). Na ficha, diga **quantos mobs batiam em você**.
 
-### F. Cooldown das poções
+### E. Cooldown das poções
 
 - **Descobre:** de quanto em quanto tempo dá pra tomar cada poção, e se a de vida e a de mana dividem o
   mesmo tempo.
 - **Como:** faça com a vida e a mana baixas, para não desperdiçar poção. Tome 10 poções seguidas o mais
   rápido que der. Depois, alterne: uma de vida, uma de mana.
 
-### G. Mob cansado
+### F. Mob cansado
 
 - **Descobre:** se matar o mob e esperar ele renascer faz ele voltar a dar stat.
 - **Como:** num mob que já mostrou a mensagem vermelha de que ele está cansado, mate, espere renascer e bata de novo. Veja

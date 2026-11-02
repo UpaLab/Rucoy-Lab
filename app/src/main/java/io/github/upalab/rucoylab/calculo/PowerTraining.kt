@@ -4,7 +4,7 @@
  *
  * Código próprio do UpaLab. Modelo de power training calibrado com os testes do dono do projeto
  * (A e B em 01/11/2026; teste quadro a quadro em 02/11/2026; melee, stat 98–100, arma de treino,
- * Assassin Ninjas, estamina verde + bônus online). Ver
+ * Assassin Ninjas, estamina verde). Ver
  * docs/modelo-golpes-liberados.md e docs/pendencias-teste.md.
  */
 package io.github.upalab.rucoylab.calculo

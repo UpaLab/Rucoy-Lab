@@ -51,8 +51,7 @@ fun TelaProgresso(modifier: Modifier) {
     var ritmo by rememberSaveable { mutableStateOf(Ritmo.entries[prefs.getInt("ritmo", 0)]) }
     var mobs by rememberSaveable { mutableStateOf(prefs.getInt("mobs", 4)) }
     var verde by rememberSaveable { mutableStateOf(prefs.getBoolean("verde", false)) }
-    var online by rememberSaveable { mutableStateOf(prefs.getBoolean("online", false)) }
-    var bonusTotal by rememberSaveable { mutableStateOf(prefs.getString("bonusTotal_v2", null) ?: Bonus.sugerido(verde, online).texto()) }
+    var bonusTotal by rememberSaveable { mutableStateOf(prefs.getString("bonusTotal_v3", null) ?: Bonus.padrao(verde).texto()) }
     var revezar by rememberSaveable { mutableStateOf(prefs.getBoolean("revezar", false)) }
     var troca by rememberSaveable { mutableStateOf(prefs.getString("troca", "15") ?: "15") }
     var meusTicks by rememberSaveable { mutableStateOf(prefs.getString("meusTicks", "") ?: "") }
@@ -60,9 +59,9 @@ fun TelaProgresso(modifier: Modifier) {
     var levelMeta by rememberSaveable { mutableStateOf(prefs.getString("levelMeta", "") ?: "") }
     var expHora by rememberSaveable { mutableStateOf(prefs.getString("expHora", "") ?: "") }
 
-    LaunchedEffect(statAtual, statMeta, ritmo, verde, online, bonusTotal, revezar, troca, meusTicks, levelAtual, levelMeta, expHora) {
+    LaunchedEffect(statAtual, statMeta, ritmo, verde, bonusTotal, revezar, troca, meusTicks, levelAtual, levelMeta, expHora) {
         prefs.edit().putString("statAtual", statAtual).putString("statMeta", statMeta).putInt("ritmo", ritmo.ordinal)
-            .putBoolean("verde", verde).putBoolean("online", online).putString("bonusTotal_v2", bonusTotal)
+            .putBoolean("verde", verde).putString("bonusTotal_v3", bonusTotal)
             .putBoolean("revezar", revezar).putString("troca", troca).putString("meusTicks", meusTicks)
             .putString("levelAtual", levelAtual).putString("levelMeta", levelMeta).putString("expHora", expHora).apply()
     }
@@ -79,13 +78,12 @@ fun TelaProgresso(modifier: Modifier) {
         Escolha("Como vai treinar", Ritmo.entries, ritmo, { it.rotulo }) { ritmo = it }
         if (ritmo != Ritmo.OFFLINE) {
             Text("Bônus de exp", style = MaterialTheme.typography.labelLarge)
-            Chave("Estamina verde (24 h ou mais): 1,5×", verde) { verde = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
-            Chave("Bônus dos 120 minutos (a confirmar)", online) { online = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
-            CampoDecimal("Multiplicador total", bonusTotal, Modifier.fillMaxWidth()) { bonusTotal = it }
+            Chave("Estamina verde (acima de 24 h)", verde) { verde = it; bonusTotal = Bonus.padrao(verde).texto() }
+            CampoDecimal("Multiplicador de exp (1 = sem bônus)", bonusTotal, Modifier.fillMaxWidth()) { bonusTotal = it }
             Text(
-                "Estamina verde: 1,5× (notas oficiais 1.21 e os testes). ❗ A wiki diz 2×. " +
-                    "🔶 Bônus dos 120 minutos: valor a confirmar. Nos testes de power training ele não fez diferença, " +
-                    "então por enquanto não soma nada. O multiplicador total é editável.",
+                "É um bônus só: a estamina vai até 26 h, e as últimas 2 h (acima de 24 h) são a parte verde. A mensagem " +
+                    "\"120 minutes of bonus level and skill experience\" é o jogo avisando quanto resta dela. " +
+                    "Padrão 1,5× (sua experiência e o teste de 02/11). ❗ A wiki diz 2×. Você pode mudar.",
                 style = MaterialTheme.typography.bodySmall,
             )
             Chave("Revezar mobs (o mob cansa antes de morrer)", revezar) { revezar = it }

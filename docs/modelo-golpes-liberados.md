@@ -5,8 +5,8 @@
 >
 > **Recalibrado em 02/11/2026** (teste quadro a quadro, `pendencias-teste.md`, seção 5c). Valores sem bônus:
 > 3,2 mobs atingidos, 1,33 s entre especiais, **0,95 tick por mob** no especial, 9 golpes entre especiais,
-> **0,75 tick por golpe**, ~1 s por golpe. 🔶 Supondo bônus total de **1,5×** nos testes (o 2× do treino
-> online não apareceu no power training).
+> **0,75 tick por golpe**, ~1 s por golpe. 🔶 Supondo a estamina verde (o único bônus de exp)
+> em **1,5×** nos testes (❗ a wiki diz 2×).
 
 ## A hipótese, em linguagem simples
 

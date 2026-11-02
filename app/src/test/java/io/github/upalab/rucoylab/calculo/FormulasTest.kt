@@ -140,7 +140,7 @@ class FormulasTest {
 
     /**
      * Teste de 02/11 (quadro a quadro): 99 (59%) → 100 (1%) em 116 s, ~87 especiais, ~276 acertos,
-     * 415 de mana da barra + 37 poções básicas ≈ 4.350 de mana. Estamina verde + bônus online.
+     * 415 de mana da barra + 37 poções básicas ≈ 4.350 de mana. Estamina verde (1,5×).
      */
     @Test fun reproduzTesteQuadroAQuadro() {
         val ganhou = 0.41 * ticksDoPonto(99) + 0.01 * ticksDoPonto(100)   // ≈ 396 ticks
@@ -267,10 +267,8 @@ class FormulasTest {
     }
 
     @Test fun bonusOficiais() {
-        assertEquals(1.0, Bonus.sugerido(false, false), d)
-        assertEquals(1.5, Bonus.sugerido(true, false), d)   // estamina verde: +50% (oficial 1.21)
-        assertEquals(1.0, Bonus.sugerido(false, true), d)   // 🔶 bônus dos 120 min: a confirmar; sem efeito visível no power (teste 02/11)
-        assertEquals(1.5, Bonus.sugerido(true, true), d)    // 🔶 o que os testes mostraram com os dois ligados
+        assertEquals(1.0, Bonus.padrao(false), d)   // estamina branca: sem bônus
+        assertEquals(1.5, Bonus.padrao(true), d)    // estamina verde: 1,5× (❗ a wiki diz 2×)
     }
 
     @Test fun cansacoDoMob() {

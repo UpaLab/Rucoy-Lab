@@ -20,14 +20,13 @@
 | Preço das poções | 50 / 150 / 350 / 650 gold (básica / Greater / Super / Ultimate) | wiki (Supplies Merchant) |
 | Tomar a poção básica no ritmo do cooldown mantém os especiais | sim | observação do dono; bate com a conta (100 de mana por segundo > 50 por segundo do especial) |
 | **Golpes normais sem dano contam tick** quando o especial dá dano (a regra do "1 a cada 10") | sim: no teste B sobraram ~87 ticks que os especiais não explicam | testes A e B do dono, 01/11/2026 |
-| Ticks do especial | **~1,4 por mob atingido com estamina verde + bônus dos 120 min** (~276 acertos → ~396 ticks). Sem bônus, 🔶 ~0,95 | teste quadro a quadro, 02/11/2026 (seção 5c) |
+| Ticks do especial | **~1,4 por mob atingido com a estamina verde** (~276 acertos → ~396 ticks). Sem bônus, 🔶 ~0,95 | teste quadro a quadro, 02/11/2026 (seção 5c) |
 | Intervalo entre especiais (só especial) | **~1,33 s** com as pausas (116 s ÷ ~87); teste A deu ~1,45 s | teste de 02/11 e teste A |
 | Mobs atingidos por especial | **~3,2 em média** puxando 4 (4 → 2–3 → 1 conforme morrem) | teste de 02/11 (contado em vídeo) |
 | Mana por poção básica no teste | **~93** (dentro da faixa 70–130 da wiki) | teste A |
 | **Mob cansa** (mensagem vermelha de mob cansado; 🔶 texto exato a confirmar): cada mob só dá stat por ~7 min 30 s. Vale **por indivíduo**: outros do mesmo tipo continuam dando stat | sim, de forma aproximada (Assassins duravam mais de 5 min sem morrer com melee ~70–80) | wiki + observação do dono |
-| Estamina verde (24 h ou mais) | **1,5×** de exp de level e skill. ❗ **Conflito:** a wiki diz 2× | notas oficiais (update 1.21), experiência do dono e teste de 02/11 |
-| Bônus dos "120 minutes of bonus level and skill experience" | 🔶 **a confirmar.** As notas oficiais falam em 2× de skill, mas na prática o dono não percebe efeito | notas oficiais (update 1.25) × experiência do dono |
-| Total com os dois bônus ligados, no power training | **~1,4–1,5×** (se 1 acerto = 1 tick). O bônus dos 120 min **não apareceu** | teste de 02/11 (seção 5c) 🔶 |
+| **Bônus de exp: existe UM só**, o da estamina verde. A estamina vai até 26 h e fica branca abaixo de 24 h; a parte verde são exatamente as últimas 2 h. A mensagem "You have 120 minutes of bonus level and skill experience" é o jogo avisando quanto resta da parte verde | sim | dono do projeto, 02/11/2026 |
+| Quanto vale a estamina verde | **1,5×**. ❗ **Conflito de fontes:** a wiki diz 2×. O teste de 02/11 (~1,4 tick por acerto) bate com 1,5× | experiência do dono + teste de 02/11 (seção 5c) × wiki |
 | Fórmula de exp de level (`level^(level/1000+3)`) | bate: 872.188 de exp fica dentro do level 84 (859.958 a 895.896) | teste de 02/11 |
 
 ---
@@ -115,40 +114,19 @@ avanço do stat estimado pelo tamanho da barra, então os números são **aproxi
 **Conclusões:**
 - ✅ Os golpes normais **contam** tick sem dar dano, desde que o especial dê dano. No teste B, os ~9 especiais
   explicam ~45 ticks; os outros **~87** vieram dos ~82 golpes normais.
-- ✅ O especial rende **~1 tick por mob atingido** (4,8 ÷ 2 de bônus ÷ ~2,4 mobs).
+- ✅ O especial rende **~1 tick por mob atingido** sem bônus (ver a recalibração na seção 5c).
 - ✅ **Rápido** (só especial) sobe o stat ~2,3× mais rápido. **Econômico** (especial + golpes) gasta ~2,6×
   menos poção por tick.
 
-**Bônus durante os testes:** a estamina estava em **26:00:00 verde** e também apareceu **"You have 120 minutes
-of bonus level and skill experience"**. São **dois bônus diferentes** (notas oficiais):
+**Bônus durante os testes:** a estamina estava em **26:00:00 verde** e apareceu **"You have 120 minutes of
+bonus level and skill experience"**. É **um bônus só**: a mensagem diz quanto resta da parte verde da
+estamina (as 2 h acima de 24 h). Vale **1,5×** pela experiência do dono (❗ a wiki diz 2×).
 
-| Bônus | Quanto | Fonte |
-|---|---|---|
-| Estamina verde (24 h ou mais) | +50% (1,5×) | update 1.21 |
-| Treino online (2 h por dia) | 2× de skill | update 1.25 |
-| **Os dois juntos** | 🔶 **2,5× (se somam) ou 3× (se multiplicam)**: o oficial não diz | o Mims oferece 1,5×/2×/2,5×, o que sugere soma |
-
-> ⚠️ **Substituído pela seção 5c (02/11/2026).** O teste quadro a quadro mostrou que o bônus total era
-> ~1,5×, não 2,5×. O texto abaixo fica como histórico.
-
-**Recalibração (01/11/2026):** antes a gente supunha 2× nos testes. Agora o app supõe **2,5×** (soma), e os
-valores **sem bônus** ficaram:
-- especial: **~0,77 tick por mob atingido** (4,8 ÷ 2,5 ÷ 2,5 mobs). Se os mobs atingidos foram mais perto de 2,
-  dá ~0,96;
-- golpe normal: **~0,42 tick** (1,06 ÷ 2,5), se o bônus vale nos golpes.
-
-O app continua reproduzindo os testes A e B com 2,5×. O multiplicador total é editável na tela.
+> ⚠️ **Histórico corrigido (02/11/2026).** Antes, este documento tratava a mensagem dos 120 minutos como um
+> segundo bônus ("treino online", leitura nossa das notas do update 1.25) e calibrava os testes com 2× e
+> depois 2,5×. **Isso estava errado:** é um bônus só, de 1,5×. Os valores certos estão na seção 5c.
 
 **Em aberto:**
-- 🔶 **Os dois bônus somam ou multiplicam?** E o **bônus de treino online vale nos golpes normais** sem dano?
-- **Teste que separa os dois (combinado):** repetir o **teste B** (1 especial + ~9 golpes, melee, arma de
-  treino, ninjas) **depois que os 120 minutos acabarem**, ainda com a **estamina verde**. Assim só fica o
-  bônus de 1,5×. Anotar o mesmo de antes: stat com porcentagem antes e depois, especiais, poções e tempo.
-  Pra diminuir o erro da barra, vale fazer **mais tempo (5 min ou mais)**.
-  - Se os dois **somavam** (2,5×): o mesmo ritmo deve render **~60%** dos ticks do teste B original.
-  - Se **multiplicavam** (3×): deve render **~50%**.
-  - Se o online **não valia nos golpes**: a parte dos golpes quase não muda, e só a dos especiais cai.
-  - Se der pra repetir também com a **estamina branca** (menos de 24 h) e sem o online, sai o valor **sem bônus**.
 - **Mob cansado: matar e renascer zera?** A wiki diz que **não** (o mob renasce ainda cansado e leva 1 hora pra
   voltar), mas isso não foi conferido. **Como testar:** num mob que já cansou, matar, esperar renascer e ver
   se a mensagem volta logo no primeiro golpe.
@@ -158,7 +136,7 @@ O app continua reproduzindo os testes A e B com 2,5×. O multiplicador total é 
 ## 5c. Teste quadro a quadro (02/11/2026) ✅ — o mais preciso até agora
 
 Contado quadro a quadro em vídeo pelo dono. Melee, Assassin Ninjas, power training só com especial
-(golpes normais só num trecho em que a mana zerou). **Estamina verde e "120 minutes of bonus" ligados.**
+(golpes normais só num trecho em que a mana zerou). **Estamina verde** (a mensagem "120 minutes of bonus" é ela).
 
 ### O personagem
 
@@ -199,12 +177,11 @@ mais de 9 seguidos sem especial, então no máximo 9 contariam, e isso tiraria n
 
 **O que isso diz sobre o bônus:** os dados medem só "ticks por acerto **com** bônus" (~1,4). Pra separar o
 bônus, precisa supor quanto vale um acerto sem bônus:
-- Se 1 acerto = **1 tick** (o mais simples): o total foi **~1,4–1,5×**. Isso bate com **só a estamina verde
-  (1,5×)**, que é o único bônus que o dono percebe no jogo. O bônus dos 120 min **não apareceu** no power
-  training (ou não vale nele, ou vale pouco). 🔶 O valor dele fica **a confirmar**.
-- Pra o total ser 2,5×, cada acerto valeria só ~0,57 tick sem bônus, o que não tem motivo pra ser assim.
+- Se 1 acerto = **1 tick** (o mais simples): o bônus foi **~1,4–1,5×**. Isso bate com a **estamina verde
+  de 1,5×**, o único bônus de exp que existe.
+- Pra bater com os 2× da wiki, cada acerto valeria só ~0,72 tick sem bônus, o que não tem motivo pra ser assim.
 
-🔶 Então o app agora supõe **1,5× com os dois ligados** e **~0,95 tick por acerto sem bônus**. Ainda é
+🔶 Então o app supõe **1,5×** e **~0,95 tick por acerto sem bônus**. Ainda é
 suposição: a curva de ticks da comunidade também pode estar um pouco errada no stat 99–100.
 
 ### Juntando com os testes A e B
@@ -229,7 +206,7 @@ pausas); quem quiser o mais rápido possível pode trocar.
 
 | Valor padrão | Antes | Agora | Fonte |
 |---|---|---|---|
-| Bônus total com estamina verde + online | 2,5× | **1,5×** | teste 02/11 |
+| Bônus nos testes (estamina verde, um bônus só) | 2× e depois 2,5× (supunha dois bônus) | **1,5×** | experiência do dono + teste 02/11 |
 | Ticks por mob no especial (sem bônus) | 0,77 | **0,95** | 1,43 ÷ 1,5 |
 | Ticks por golpe normal (sem bônus) | 0,42 | **0,75** | teste B ÷ 1,5 |
 | Mobs atingidos por especial | 2,5 | **3,2** | 276 ÷ 87 |
@@ -238,15 +215,16 @@ pausas); quem quiser o mais rápido possível pode trocar.
 | Vida perdida por minuto (Assassin Ninja) | vazio | **~905** | 7 × 250 em 116 s |
 
 Os campos lembrados no celular foram renomeados, então quem já usava o app passa a ver os padrões novos.
+Na tela Progresso ficou **uma chave só**, "Estamina verde", com o multiplicador editável (padrão 1,5×).
 
 **Rápido × Econômico** (melee 72 → 90, ~11.560 ticks, poção básica):
 
 | | Rápido antes | Rápido agora | Econômico antes | Econômico agora |
 |---|---|---|---|---|
-| **Com os dois bônus** (2,5× antes, 1,5× agora) | 1.201 poções, ~1,0 h | 1.267 poções, ~0,9 h | 405 poções, ~2,3 h | **394 poções, ~2,2 h** |
+| **Com a estamina verde** (2,5× antes, 1,5× agora) | 1.201 poções, ~1,0 h | 1.267 poções, ~0,9 h | 405 poções, ~2,3 h | **394 poções, ~2,2 h** |
 | **Sem bônus** | 3.002 poções, ~2,4 h | 1.901 poções, ~1,4 h | 1.013 poções, ~5,6 h | 590 poções, ~3,3 h |
 
-- **Com os bônus ligados quase nada muda**: era o caso que os testes mediram, então antes e agora batem
+- **Com a estamina verde quase nada muda**: era o caso que os testes mediram, então antes e agora batem
   com eles. A sua lembrança de ~400 poções continua batendo com o Econômico (394).
 - **Sem bônus o app ficou bem mais otimista** (~40% menos poção e tempo), porque antes ele "tirava" um
   bônus de 2,5× que, pelos dados, era só 1,5×.
@@ -279,12 +257,11 @@ fica só registrado. 🔶 Hipótese pra testar depois: 1 tick por golpe recebido
 
 ### Em aberto depois deste teste
 
-- **O online vale no power training?** Agora o teste que separa é ainda mais útil: repetir o mesmo
-  ritmo **depois que os 120 minutos acabarem**, ainda com a estamina verde.
-  - Se render **o mesmo** (~1,4 tick por acerto): o online não vale no power (é o que o app supõe agora).
-  - Se render **~60%**: os bônus somam (2,5×) e um acerto sem bônus vale ~0,57.
-  - Se render **~50%**: multiplicam (3×).
-- **Estamina branca, sem online:** dá o valor sem bônus direto (o app supõe ~0,95 por acerto).
+- **Power training com a estamina BRANCA (sem bônus)** ⭐: o mesmo ritmo deste teste com a estamina abaixo
+  de 24 h. Dá o valor sem bônus direto e resolve o conflito com a wiki:
+  - se render **~2/3** deste teste (~0,95 tick por acerto): a estamina verde vale **1,5×** (o app supõe isso);
+  - se render **~1/2** (~0,72 tick por acerto): vale **2×**, como diz a wiki.
+  - Quem joga pouco não consegue (a estamina enche de novo quando fica off): é pra quem joga muitas horas.
 - **Intervalo da regeneração de vida** (com e sem o colar).
 - **Golpe normal vale 1 acerto?** Um teste B contado em vídeo, como este, resolveria.
 
