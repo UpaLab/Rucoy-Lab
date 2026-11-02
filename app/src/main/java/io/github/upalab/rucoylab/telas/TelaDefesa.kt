@@ -75,7 +75,7 @@ fun TelaDefesa(modifier: Modifier) {
             CampoNumero("Soma dos outros itens", outros, Modifier.weight(1f)) { outros = it }
         }
         Text(
-            "Outros itens: capacete, armadura, calça, bota, cinturão, anéis, luvas… (tudo menos o escudo).",
+            "Outros itens: capacete, armadura, calça, bota, anéis e o que mais tiver defesa (tudo menos o escudo).",
             style = MaterialTheme.typography.bodySmall,
         )
 

@@ -269,7 +269,7 @@ class FormulasTest {
     @Test fun bonusOficiais() {
         assertEquals(1.0, Bonus.sugerido(false, false), d)
         assertEquals(1.5, Bonus.sugerido(true, false), d)   // estamina verde: +50% (oficial 1.21)
-        assertEquals(1.0, Bonus.sugerido(false, true), d)   // 🔶 treino online: sem efeito visível no power (teste 02/11)
+        assertEquals(1.0, Bonus.sugerido(false, true), d)   // 🔶 bônus dos 120 min: a confirmar; sem efeito visível no power (teste 02/11)
         assertEquals(1.5, Bonus.sugerido(true, true), d)    // 🔶 o que os testes mostraram com os dois ligados
     }
 

@@ -9,25 +9,31 @@ package io.github.upalab.rucoylab.calculo
 
 /** Bônus de exp de skill. */
 object Bonus {
-    /** Estamina com 24 h ou mais: +50% de exp de level e skill (oficial, update 1.21). */
+    /**
+     * Estamina verde (24 h ou mais): +50% → 1,5×. Fontes: notas oficiais (update 1.21), experiência do
+     * dono do projeto e o teste de 02/11/2026. ❗ Conflito: a wiki diz 2×.
+     */
     const val ESTAMINA_VERDE = 0.5
 
-    /** Bônus de treino online: 2× de exp de skill, 2 h a cada 24 h (oficial, update 1.25). */
-    const val TREINO_ONLINE_OFICIAL = 1.0
+    /**
+     * Bônus dos "120 minutes of bonus level and skill experience": 🔶 A CONFIRMAR.
+     * As notas oficiais (update 1.25) falam em 2× de skill, mas no jogo o dono não percebe efeito.
+     */
+    const val BONUS_120_MIN_OFICIAL = 1.0
 
     /**
-     * 🔶 Quanto o treino online acrescentou NO POWER TRAINING nos testes do dono: nada visível.
+     * 🔶 Quanto o bônus dos 120 min acrescentou NO POWER TRAINING nos testes do dono: nada visível.
      * Teste de 02/11/2026 (quadro a quadro): com os dois bônus ligados, ~1,4 tick por acerto. Se o acerto
      * vale ~1 tick, o total foi ~1,5× (só a estamina verde). Ver docs/pendencias-teste.md, seção 5c.
      */
-    const val TREINO_ONLINE_NO_POWER_MEDIDO = 0.0
+    const val BONUS_120_MIN_NO_POWER_MEDIDO = 0.0
 
     /**
      * 🔶 Multiplicador total sugerido, pelo que os testes mostraram (não pelo texto oficial):
-     * estamina verde = 1,5×; o treino online não mudou o resultado do power training.
+     * estamina verde = 1,5×; o bônus dos 120 min (a confirmar) não mudou o resultado do power training.
      */
     fun sugerido(estaminaVerde: Boolean, treinoOnline: Boolean): Double =
-        1.0 + (if (estaminaVerde) ESTAMINA_VERDE else 0.0) + (if (treinoOnline) TREINO_ONLINE_NO_POWER_MEDIDO else 0.0)
+        1.0 + (if (estaminaVerde) ESTAMINA_VERDE else 0.0) + (if (treinoOnline) BONUS_120_MIN_NO_POWER_MEDIDO else 0.0)
 
     /** Multiplicador total que os testes A, B e o de 02/11 sustentam (os dois bônus ligados). 🔶 */
     const val NOS_TESTES = 1.5

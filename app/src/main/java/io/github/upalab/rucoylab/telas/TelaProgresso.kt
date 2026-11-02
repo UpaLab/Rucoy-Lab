@@ -79,13 +79,13 @@ fun TelaProgresso(modifier: Modifier) {
         Escolha("Como vai treinar", Ritmo.entries, ritmo, { it.rotulo }) { ritmo = it }
         if (ritmo != Ritmo.OFFLINE) {
             Text("Bônus de exp", style = MaterialTheme.typography.labelLarge)
-            Chave("Estamina verde (24 h ou mais): +50%", verde) { verde = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
-            Chave("Bônus de treino online (2 h por dia)", online) { online = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
+            Chave("Estamina verde (24 h ou mais): 1,5×", verde) { verde = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
+            Chave("Bônus dos 120 minutos (a confirmar)", online) { online = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
             CampoDecimal("Multiplicador total", bonusTotal, Modifier.fillMaxWidth()) { bonusTotal = it }
             Text(
-                "Oficial (notas 1.21 e 1.25): estamina verde = +50%; treino online = 2× de skill. " +
-                    "🔶 Mas nos seus testes de power training, com os dois ligados, o total foi ~1,5× (como se só a estamina valesse). " +
-                    "Por isso o app sugere 1,5× com os dois. Você pode mudar.",
+                "Estamina verde: 1,5× (notas oficiais 1.21 e os testes). ❗ A wiki diz 2×. " +
+                    "🔶 Bônus dos 120 minutos: valor a confirmar. Nos testes de power training ele não fez diferença, " +
+                    "então por enquanto não soma nada. O multiplicador total é editável.",
                 style = MaterialTheme.typography.bodySmall,
             )
             Chave("Revezar mobs (o mob cansa antes de morrer)", revezar) { revezar = it }

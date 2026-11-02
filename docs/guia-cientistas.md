@@ -16,19 +16,21 @@
 
 ## Antes de começar
 
-1. Ligue a gravação de tela do celular.
-2. **Abra a tela de status** (onde aparecem level, exp, stats e as barras de porcentagem) e deixe aparecer
+1. Ative o modo **Não Perturbe** antes de gravar, para nenhuma notificação (WhatsApp, e-mail, nome da
+   conta) aparecer no vídeo.
+2. Ligue a gravação de tela do celular.
+3. **Abra a tela de status** (onde aparecem level, exp, stats e as barras de porcentagem) e deixe aparecer
    uns 2 segundos. A gente mede a barra pelos pixels, então não precisa anotar a porcentagem.
-3. **Mostre a estamina** (o relógio com a cor verde ou branca) e, se aparecer, a mensagem
+4. **Mostre a estamina** (o relógio com a cor verde ou branca) e, se aparecer, a mensagem
    "You have X minutes of bonus level and skill experience".
-4. **Mostre o inventário:** a quantidade de cada poção e o equipamento que você está vestindo.
-5. Anote ou fale no áudio: **classe, level, arma (e o +buff, se tiver), anel e colar.**
+5. **Mostre o inventário:** a quantidade de cada poção e o equipamento que você está vestindo.
+6. Anote ou fale no áudio: **classe, level, arma (e o +buff, se tiver), anel e colar.**
 
 ## Durante o teste
 
 - Treine **pelo menos 2 minutos**. 5 minutos ou mais é melhor, porque o erro da barra pesa menos.
 - **Mantenha o mesmo ritmo** do começo ao fim (só especial, ou especial + golpes, conforme o teste).
-- Se algo mudar no meio (um mob morreu, a mana acabou, apareceu a mensagem "this monster is exhausted",
+- Se algo mudar no meio (um mob morreu, a mana acabou, apareceu a mensagem vermelha de que o mob está cansado,
   outro jogador chegou), **não pare a gravação**: só continue. A gente marca no vídeo.
 
 ## No fim
@@ -39,6 +41,8 @@ o fim que vira o resultado.
 ## Como mandar
 
 No canal de testes do Discord do UpaLab:
+
+> ℹ️ O canal de testes do Discord do UpaLab **ainda será criado**. Até lá, guarde o vídeo e a ficha.
 
 - o vídeo (ou o link dele);
 - esta ficha preenchida (copie e cole):
@@ -64,7 +68,8 @@ Em ordem de prioridade. Cada um diz **o que queremos descobrir**.
 
 ### A. Power training SEM o bônus online ⭐ (o mais importante)
 
-- **Descobre:** se o bônus de treino online (2×) vale no power training.
+- **Descobre:** se o bônus online (valor a descobrir) vale no power training. A estamina verde parece valer
+  1,5× (a wiki diz 2×), e queremos saber se o bônus online soma alguma coisa em cima disso.
 - **Quem consegue:** quem joga mais de 2 horas seguidas no dia. Faça o teste **depois que a mensagem dos
   120 minutos acabar**, ainda com a **estamina verde**.
 - **Como:** só especial, nos mesmos mobs de sempre, 3 a 5 minutos.
@@ -97,12 +102,13 @@ Em ordem de prioridade. Cada um diz **o que queremos descobrir**.
 
 - **Descobre:** de quanto em quanto tempo dá pra tomar cada poção, e se a de vida e a de mana dividem o
   mesmo tempo.
-- **Como:** tome 10 poções seguidas o mais rápido que der. Depois, alterne: uma de vida, uma de mana.
+- **Como:** faça com a vida e a mana baixas, para não desperdiçar poção. Tome 10 poções seguidas o mais
+  rápido que der. Depois, alterne: uma de vida, uma de mana.
 
 ### G. Mob cansado
 
 - **Descobre:** se matar o mob e esperar ele renascer faz ele voltar a dar stat.
-- **Como:** num mob que já mostrou "this monster is exhausted", mate, espere renascer e bata de novo. Veja
+- **Como:** num mob que já mostrou a mensagem vermelha de que ele está cansado, mate, espere renascer e bata de novo. Veja
   se a mensagem aparece logo no primeiro golpe.
 
 ## O que a gente faz com o seu vídeo

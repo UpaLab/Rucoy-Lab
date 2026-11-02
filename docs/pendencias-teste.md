@@ -20,14 +20,14 @@
 | Preço das poções | 50 / 150 / 350 / 650 gold (básica / Greater / Super / Ultimate) | wiki (Supplies Merchant) |
 | Tomar a poção básica no ritmo do cooldown mantém os especiais | sim | observação do dono; bate com a conta (100 de mana por segundo > 50 por segundo do especial) |
 | **Golpes normais sem dano contam tick** quando o especial dá dano (a regra do "1 a cada 10") | sim: no teste B sobraram ~87 ticks que os especiais não explicam | testes A e B do dono, 01/11/2026 |
-| Ticks do especial | **~1,4 por mob atingido com estamina verde + bônus online** (~276 acertos → ~396 ticks). Sem bônus, 🔶 ~0,95 | teste quadro a quadro, 02/11/2026 (seção 5c) |
+| Ticks do especial | **~1,4 por mob atingido com estamina verde + bônus dos 120 min** (~276 acertos → ~396 ticks). Sem bônus, 🔶 ~0,95 | teste quadro a quadro, 02/11/2026 (seção 5c) |
 | Intervalo entre especiais (só especial) | **~1,33 s** com as pausas (116 s ÷ ~87); teste A deu ~1,45 s | teste de 02/11 e teste A |
 | Mobs atingidos por especial | **~3,2 em média** puxando 4 (4 → 2–3 → 1 conforme morrem) | teste de 02/11 (contado em vídeo) |
 | Mana por poção básica no teste | **~93** (dentro da faixa 70–130 da wiki) | teste A |
-| **Mob cansa** ("this monster is exhausted"): cada mob só dá stat por ~7 min 30 s. Vale **por indivíduo**: outros do mesmo tipo continuam dando stat | sim, de forma aproximada (Assassins duravam mais de 5 min sem morrer com melee ~70–80) | wiki + observação do dono |
-| Estamina verde (24 h ou mais) | **+50%** de exp de level e skill (**1,5×**, e não 2× como dizia a wiki) | notas oficiais, update 1.21 |
-| Bônus de treino online ("120 minutes of bonus…") | **2×** de exp de skill; 2 h a cada 24 h, com estamina própria | notas oficiais, update 1.25 |
-| Total com os dois bônus ligados, no power training | **~1,4–1,5×** (se 1 acerto = 1 tick). O 2× do online **não apareceu** | teste de 02/11 (seção 5c) 🔶 |
+| **Mob cansa** (mensagem vermelha de mob cansado; 🔶 texto exato a confirmar): cada mob só dá stat por ~7 min 30 s. Vale **por indivíduo**: outros do mesmo tipo continuam dando stat | sim, de forma aproximada (Assassins duravam mais de 5 min sem morrer com melee ~70–80) | wiki + observação do dono |
+| Estamina verde (24 h ou mais) | **1,5×** de exp de level e skill. ❗ **Conflito:** a wiki diz 2× | notas oficiais (update 1.21), experiência do dono e teste de 02/11 |
+| Bônus dos "120 minutes of bonus level and skill experience" | 🔶 **a confirmar.** As notas oficiais falam em 2× de skill, mas na prática o dono não percebe efeito | notas oficiais (update 1.25) × experiência do dono |
+| Total com os dois bônus ligados, no power training | **~1,4–1,5×** (se 1 acerto = 1 tick). O bônus dos 120 min **não apareceu** | teste de 02/11 (seção 5c) 🔶 |
 | Fórmula de exp de level (`level^(level/1000+3)`) | bate: 872.188 de exp fica dentro do level 84 (859.958 a 895.896) | teste de 02/11 |
 
 ---
@@ -167,7 +167,7 @@ Contado quadro a quadro em vídeo pelo dono. Melee, Assassin Ninjas, power train
 | Level / HP / MP | 84 / 1.360 / 940 |
 | Stats | Defense 92, Melee 99 → 100 durante o teste |
 | Arma | adaga de treino (ataque 5) |
-| Defesa dos itens | capacete 12, armadura 18, calça 15, bota 9, escudo 28, cinturão 9, anel verde 2, luvas 6 + 6 = **105** (77 sem o escudo) |
+| Defesa dos itens | capacete 12, armadura 18, calça 15, bota 9, escudo 28, anel 9, um item verde de 2 e dois itens de 6 (🔶 tipos a confirmar) = **105** (77 sem o escudo) |
 | Colar de vida | sem defesa; a regeneração natural de vida passa de **2 para 3 por vez** (🔶 intervalo a medir) |
 
 ### O que foi lido e contado
@@ -200,7 +200,8 @@ mais de 9 seguidos sem especial, então no máximo 9 contariam, e isso tiraria n
 **O que isso diz sobre o bônus:** os dados medem só "ticks por acerto **com** bônus" (~1,4). Pra separar o
 bônus, precisa supor quanto vale um acerto sem bônus:
 - Se 1 acerto = **1 tick** (o mais simples): o total foi **~1,4–1,5×**. Isso bate com **só a estamina verde
-  (1,5×)**. O 2× do treino online **não apareceu** no power training (ou não vale nele, ou não soma).
+  (1,5×)**, que é o único bônus que o dono percebe no jogo. O bônus dos 120 min **não apareceu** no power
+  training (ou não vale nele, ou vale pouco). 🔶 O valor dele fica **a confirmar**.
 - Pra o total ser 2,5×, cada acerto valeria só ~0,57 tick sem bônus, o que não tem motivo pra ser assim.
 
 🔶 Então o app agora supõe **1,5× com os dois ligados** e **~0,95 tick por acerto sem bônus**. Ainda é
