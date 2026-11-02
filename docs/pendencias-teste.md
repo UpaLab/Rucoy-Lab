@@ -5,6 +5,8 @@
 >
 > Ao mandar um resultado, inclua: classe, level, stat, arma (ataque e +buff), mob, e se usou anel ou bônus
 > de exp. Um print ajuda muito.
+>
+> **Vai gravar um teste?** Veja o passo a passo em [`guia-cientistas.md`](guia-cientistas.md).
 
 ## Já confirmado no jogo ✅
 
