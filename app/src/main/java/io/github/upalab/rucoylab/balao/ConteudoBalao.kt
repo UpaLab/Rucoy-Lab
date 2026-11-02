@@ -58,11 +58,14 @@ enum class Ferramenta(val rotulo: String) {
 }
 
 @Composable
-fun ConteudoBalao(mover: (Float, Float) -> Unit, abrirOuFechar: (Boolean) -> Unit, encerrar: () -> Unit) {
+fun ConteudoBalao(
+    mover: (Float, Float) -> Unit, abrirOuFechar: (Boolean) -> Unit, encerrar: () -> Unit,
+    abertoNoInicio: Boolean = false, ferramentaNoInicio: Ferramenta? = null,
+) {
     val cores = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     MaterialTheme(colorScheme = cores) {
-        var aberto by rememberSaveable { mutableStateOf(false) }
-        var escolhida by rememberSaveable { mutableStateOf<Ferramenta?>(null) }
+        var aberto by rememberSaveable { mutableStateOf(abertoNoInicio) }
+        var escolhida by rememberSaveable { mutableStateOf(ferramentaNoInicio) }
         LaunchedEffect(aberto) { abrirOuFechar(aberto) }
 
         val arrastar = Modifier.pointerInput(Unit) {

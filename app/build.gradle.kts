@@ -45,6 +45,9 @@ android {
         compose = true
     }
 
+    // Testes de tela (Robolectric): abrem cada tela num Android simulado, sem celular.
+    testOptions.unitTests.isIncludeAndroidResources = true
+
     // A tabela de mobs vem direto de data/mobs.json (uma fonte só para docs e app).
     sourceSets.getByName("main").assets.directories.add("../data")
 
@@ -70,4 +73,8 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20250517")
+    testImplementation("org.robolectric:robolectric:4.16.1")
+    testImplementation(composeBom)
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }

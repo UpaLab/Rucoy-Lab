@@ -21,7 +21,16 @@ import android.os.IBinder
 import android.provider.Settings
 import android.view.Gravity
 import android.view.WindowManager
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.OnBackPressedDispatcherOwner
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.setViewTreeOnBackPressedDispatcherOwner
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.key
 import androidx.compose.ui.platform.ComposeView
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -32,12 +41,18 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import io.github.upalab.rucoylab.R
 
-class ServicoBalao : Service(), LifecycleOwner, SavedStateRegistryOwner {
+class ServicoBalao : Service(), LifecycleOwner, SavedStateRegistryOwner, ViewModelStoreOwner, OnBackPressedDispatcherOwner {
 
     private val registro = LifecycleRegistry(this)
     private val estadoSalvo = SavedStateRegistryController.create(this)
     override val lifecycle: Lifecycle get() = registro
     override val savedStateRegistry: SavedStateRegistry get() = estadoSalvo.savedStateRegistry
+
+    // Peças que o app normal ganha de graça da tela (Activity) e que as listas de escolha (dropdown)
+    // exigem. Sem elas, abrir uma lista no balão derrubava o app.
+    private val guardaModelos = ViewModelStore()
+    override val viewModelStore: ViewModelStore get() = guardaModelos
+    override val onBackPressedDispatcher = OnBackPressedDispatcher { }
 
     private lateinit var janelas: WindowManager
     private lateinit var params: WindowManager.LayoutParams
@@ -68,18 +83,29 @@ class ServicoBalao : Service(), LifecycleOwner, SavedStateRegistryOwner {
         val v = ComposeView(this).apply {
             setViewTreeLifecycleOwner(this@ServicoBalao)
             setViewTreeSavedStateRegistryOwner(this@ServicoBalao)
-            setContent {
-                ConteudoBalao(
-                    mover = { dx, dy -> mover(dx, dy) },
-                    abrirOuFechar = { aberto -> ajustarJanela(aberto) },
-                    encerrar = { stopSelf() },
-                )
-            }
+            setViewTreeViewModelStoreOwner(this@ServicoBalao)
+            setViewTreeOnBackPressedDispatcherOwner(this@ServicoBalao)
         }
         vista = v
+        mostrar()
         janelas.addView(v, params)
         registro.handleLifecycleEvent(Lifecycle.Event.ON_START)
         registro.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    }
+
+    /** Monta o conteúdo do balão. Os testes usam [abertoNoInicio] e [ferramenta] pra abrir direto numa ferramenta. */
+    internal fun mostrar(abertoNoInicio: Boolean = false, ferramenta: Ferramenta? = null) {
+        vista?.setContent {
+            CompositionLocalProvider(LocalOnBackPressedDispatcherOwner provides this@ServicoBalao) {
+                key(abertoNoInicio, ferramenta) { ConteudoBalao(
+                    mover = { dx, dy -> mover(dx, dy) },
+                    abrirOuFechar = { aberto -> ajustarJanela(aberto) },
+                    encerrar = { stopSelf() },
+                    abertoNoInicio = abertoNoInicio,
+                    ferramentaNoInicio = ferramenta,
+                ) }
+            }
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -89,6 +115,7 @@ class ServicoBalao : Service(), LifecycleOwner, SavedStateRegistryOwner {
 
     override fun onDestroy() {
         registro.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        guardaModelos.clear()
         vista?.let { runCatching { janelas.removeView(it) } }
         vista = null
         super.onDestroy()
