@@ -76,7 +76,7 @@ private fun lembrar(prefs: SharedPreferences, chave: String, padrao: String) =
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun <T> Lista(rotulo: String, opcoes: List<T>, atual: T, nome: (T) -> String, escolher: (T) -> Unit) {
+fun <T> Lista(rotulo: String, opcoes: List<T>, atual: T, nome: (T) -> String, escolher: (T) -> Unit) {
     var aberto by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(expanded = aberto, onExpandedChange = { aberto = it }) {
         OutlinedTextField(

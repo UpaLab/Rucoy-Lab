@@ -176,7 +176,7 @@ fun horasEMinutos(horas: Double): String {
 }
 
 @Composable
-private fun Chave(texto: String, ligado: Boolean, mudar: (Boolean) -> Unit) {
+fun Chave(texto: String, ligado: Boolean, mudar: (Boolean) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(texto, Modifier.weight(1f))
         Switch(checked = ligado, onCheckedChange = mudar)

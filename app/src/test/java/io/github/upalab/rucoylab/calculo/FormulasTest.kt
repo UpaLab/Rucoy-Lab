@@ -193,6 +193,14 @@ class FormulasTest {
         assertEquals(3.0, p.ciclo.segundos, 1e-6)  // 300 ÷ 100
     }
 
+    @Test fun treinoNormalSoGastaVida() {
+        // 3.600 ticks a 3.600/h = 1 h; 100 de vida por minuto × 60 = 6.000 → 60 poções básicas.
+        val (horas, vida) = Pocoes.treinoNormal(3600.0, 3600.0, 100.0, 100.0, 50.0, 1.0)
+        assertEquals(1.0, horas, d)
+        assertEquals(60L, vida.pocoes)
+        assertEquals(3000L, vida.gold)
+    }
+
     @Test fun vidaPorMinuto() {
         val v = Pocoes.planoVida(300.0, 0.5, 100.0, 50.0, 1.0) // 30 min × 300 = 9.000 de vida
         assertEquals(90L, v.pocoes)

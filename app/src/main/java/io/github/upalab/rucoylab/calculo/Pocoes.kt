@@ -77,4 +77,18 @@ object Pocoes {
         val max = if (cooldownSeg > 0) 60 / cooldownSeg else Double.POSITIVE_INFINITY
         return PlanoVida(pocoes, (pocoes * preco).toLong(), porMinuto, porMinuto > max)
     }
+
+    /**
+     * Treino normal (golpes normais, sem especial): não gasta mana, só poção de vida.
+     * Devolve as horas de treino e o plano de poções de vida.
+     */
+    fun treinoNormal(
+        ticks: Double, ticksPorHora: Double, vidaPerdidaPorMinuto: Double,
+        recupera: Double, preco: Double, cooldownSeg: Double,
+    ): Pair<Double, PlanoVida> {
+        val horas = Progressao.horas(ticks, ticksPorHora)
+        val vida = if (horas.isFinite()) planoVida(vidaPerdidaPorMinuto, horas, recupera, preco, cooldownSeg)
+            else PlanoVida(0, 0, 0.0, false)
+        return horas to vida
+    }
 }
