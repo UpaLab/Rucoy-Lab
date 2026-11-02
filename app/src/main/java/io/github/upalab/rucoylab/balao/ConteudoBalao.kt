@@ -39,6 +39,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
+import kotlinx.coroutines.delay
 import android.content.Context
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -109,8 +110,8 @@ fun ConteudoBalao(
                         tamanho = Tamanho.entries[(tamanho.ordinal + 1) % Tamanho.entries.size]
                         prefs.edit().putInt("tamanho", tamanho.ordinal).apply()
                     }) { Text("Tamanho ${tamanho.rotulo}") }
-                    TextButton(onClick = { aberto = false }) { Text("Minimizar") }
-                    TextButton(onClick = encerrar) { Text("✕") }
+                    // O X só minimiza (volta pra bolinha): é o que a pessoa espera de um X.
+                    TextButton(onClick = { aberto = false }) { Text("✕", fontWeight = FontWeight.Bold) }
                 }
                 // Faixa de menus: rola para o lado.
                 Row(
@@ -138,6 +139,20 @@ fun ConteudoBalao(
                             Ferramenta.MOBS -> TelaMobs(m)
                         }
                     }
+                }
+                // Desligar fica separado, embaixo, e pede um segundo toque pra confirmar.
+                HorizontalDivider()
+                var confirmar by remember { mutableStateOf(false) }
+                LaunchedEffect(confirmar) { if (confirmar) { delay(3000); confirmar = false } }
+                TextButton(
+                    onClick = { if (confirmar) encerrar() else confirmar = true },
+                    modifier = Modifier.padding(start = 4.dp),
+                ) {
+                    Text(
+                        if (confirmar) "Toque de novo pra desligar o balão" else "Desligar o balão",
+                        color = if (confirmar) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
                 }
             }
         }

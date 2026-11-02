@@ -50,6 +50,20 @@ class TelasAbremTest {
     @Test fun configuracoes() = abre { TelaConfiguracoes(Modifier) }
     @Test fun appInteiro() = abre { AppUpaLab() }
 
+    @Test fun xSoMinimizaEDesligarPedeConfirmacao() {
+        var desligou = false
+        regra.setContent { ConteudoBalao(mover = { _, _ -> }, abrirOuFechar = {}, encerrar = { desligou = true }) }
+        regra.onNodeWithText("UP").performClick()
+        regra.onNodeWithText("✕").performClick()
+        regra.onNodeWithText("UP").assertExists()          // voltou pra bolinha
+        check(!desligou) { "o X desligou o balão" }
+        regra.onNodeWithText("UP").performClick()
+        regra.onNodeWithText("Desligar o balão").performClick()
+        check(!desligou) { "desligou com um toque só" }
+        regra.onNodeWithText("Toque de novo pra desligar o balão").performClick()
+        check(desligou) { "não desligou no segundo toque" }
+    }
+
     @Test fun balaoAbreCadaFerramenta() {
         regra.setContent { ConteudoBalao(mover = { _, _ -> }, abrirOuFechar = {}, encerrar = {}) }
         regra.onNodeWithText("UP").performClick()
