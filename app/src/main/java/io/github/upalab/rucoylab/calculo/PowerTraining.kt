@@ -2,8 +2,9 @@
  * UpaLab — Ferramentas para Rucoy Online (projeto de fã, sem vínculo com os desenvolvedores do jogo).
  * Copyright (C) 2026 UpaLab — GPL-3.0 (ver LICENSE).
  *
- * Código próprio do UpaLab. Modelo de power training calibrado com os testes A e B do dono do projeto
- * (01/11/2026; melee, stat 98–99, arma de treino, ninjas, bônus de exp ativo). Ver
+ * Código próprio do UpaLab. Modelo de power training calibrado com os testes do dono do projeto
+ * (A e B em 01/11/2026; teste quadro a quadro em 02/11/2026; melee, stat 98–100, arma de treino,
+ * Assassin Ninjas, estamina verde + bônus online). Ver
  * docs/modelo-golpes-liberados.md e docs/pendencias-teste.md.
  */
 package io.github.upalab.rucoylab.calculo
@@ -18,15 +19,15 @@ import kotlin.math.min
 enum class Estilo(val rotulo: String) { RAPIDO("Rápido"), ECONOMICO("Econômico") }
 
 data class ParametrosPower(
-    /** Média de mobs atingidos por especial. Teste A: 2 a 3 (mobs morrem e o grupo diminui). */
+    /** Média de mobs atingidos por especial. Teste de 02/11: ~276 acertos ÷ ~87 especiais ≈ 3,2. */
     val mobsAtingidos: Double = MOBS_MEDIDO,
-    /** Segundos entre um especial e outro no estilo Rápido. Teste A: 145 s ÷ 100 especiais. */
+    /** Segundos entre um especial e outro no estilo Rápido. Teste de 02/11: 116 s ÷ ~87 ≈ 1,33 (com as pausas). */
     val intervaloEspecial: Double = INTERVALO_MEDIDO,
     /** Golpes normais depois de cada especial no estilo Econômico. Teste B: ~9. */
     val golpesEntreEspeciais: Int = GOLPES_MEDIDO,
-    /** Ticks por mob atingido pelo especial, SEM bônus. Teste A: 4,8 por especial ÷ 2,5 de bônus ÷ 2,5 mobs. */
+    /** Ticks por mob atingido pelo especial, SEM bônus. Teste de 02/11: ~1,43 por acerto ÷ 1,5 de bônus. */
     val ticksPorMob: Double = TICKS_POR_MOB_MEDIDO,
-    /** Ticks por golpe normal sem dano, SEM bônus. 🔶 Teste B: ~1,06 com bônus ÷ 2,5 (se o bônus vale nos golpes). */
+    /** Ticks por golpe normal sem dano, SEM bônus. 🔶 Teste B: ~1,1 com bônus ÷ 1,5 (se o bônus vale nos golpes). */
     val ticksPorGolpe: Double = TICKS_POR_GOLPE_MEDIDO,
     /** Segundos por golpe normal. Teste B: 91 s ÷ (~9,4 × 10) ≈ 0,97. */
     val segundosPorGolpe: Double = 1.0,
@@ -34,12 +35,12 @@ data class ParametrosPower(
     val bonus: Double = 1.0,
 ) {
     companion object {
-        const val MOBS_MEDIDO = 2.5
-        const val INTERVALO_MEDIDO = 1.45
+        const val MOBS_MEDIDO = 3.2
+        const val INTERVALO_MEDIDO = 1.33
         const val GOLPES_MEDIDO = 9
-        /** Calibrados supondo bônus total de [Bonus.DOS_TESTES_A_B] (2,5×) nos testes. 🔶 */
-        const val TICKS_POR_MOB_MEDIDO = 0.77
-        const val TICKS_POR_GOLPE_MEDIDO = 0.42
+        /** Calibrados supondo bônus total de [Bonus.NOS_TESTES] (1,5×) nos testes. 🔶 */
+        const val TICKS_POR_MOB_MEDIDO = 0.95
+        const val TICKS_POR_GOLPE_MEDIDO = 0.75
 
         /** Pela regra do "1 a cada 10", só contam até 9 golpes depois de cada especial. */
         const val MAX_GOLPES_LIBERADOS = 9

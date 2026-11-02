@@ -13,17 +13,24 @@ object Bonus {
     const val ESTAMINA_VERDE = 0.5
 
     /** Bônus de treino online: 2× de exp de skill, 2 h a cada 24 h (oficial, update 1.25). */
-    const val TREINO_ONLINE = 1.0
+    const val TREINO_ONLINE_OFICIAL = 1.0
 
     /**
-     * 🔶 Multiplicador total sugerido. O oficial NÃO diz se os dois juntos somam (2,5×) ou multiplicam (3×).
-     * Usamos a SOMA porque o Mims' Rucoy Calculator oferece 1,5×, 2× e 2,5×.
+     * 🔶 Quanto o treino online acrescentou NO POWER TRAINING nos testes do dono: nada visível.
+     * Teste de 02/11/2026 (quadro a quadro): com os dois bônus ligados, ~1,4 tick por acerto. Se o acerto
+     * vale ~1 tick, o total foi ~1,5× (só a estamina verde). Ver docs/pendencias-teste.md, seção 5c.
+     */
+    const val TREINO_ONLINE_NO_POWER_MEDIDO = 0.0
+
+    /**
+     * 🔶 Multiplicador total sugerido, pelo que os testes mostraram (não pelo texto oficial):
+     * estamina verde = 1,5×; o treino online não mudou o resultado do power training.
      */
     fun sugerido(estaminaVerde: Boolean, treinoOnline: Boolean): Double =
-        1.0 + (if (estaminaVerde) ESTAMINA_VERDE else 0.0) + (if (treinoOnline) TREINO_ONLINE else 0.0)
+        1.0 + (if (estaminaVerde) ESTAMINA_VERDE else 0.0) + (if (treinoOnline) TREINO_ONLINE_NO_POWER_MEDIDO else 0.0)
 
-    /** Bônus total suposto nos testes A e B (estamina 26 h verde + "120 minutes of bonus"). 🔶 */
-    const val DOS_TESTES_A_B = 2.5
+    /** Multiplicador total que os testes A, B e o de 02/11 sustentam (os dois bônus ligados). 🔶 */
+    const val NOS_TESTES = 1.5
 }
 
 /** O mob "cansa": cada mob só dá stat por 7 min 30 s (wiki; observado pelo dono, de forma aproximada). */

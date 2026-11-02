@@ -43,6 +43,7 @@ import io.github.upalab.rucoylab.calculo.PowerTraining
 import io.github.upalab.rucoylab.calculo.Pocoes
 import io.github.upalab.rucoylab.calculo.TipoPocao
 import io.github.upalab.rucoylab.calculo.TiposPocao
+import io.github.upalab.rucoylab.calculo.VidaMedida
 import io.github.upalab.rucoylab.dados.Mob
 import io.github.upalab.rucoylab.dados.Mobs
 import java.util.Locale
@@ -99,11 +100,11 @@ fun PainelPocoes(ticks: Double, bonus: Double, fatorCansaco: Double = 1.0) {
     val prefs = remember { contexto.getSharedPreferences(PREFS, Context.MODE_PRIVATE) }
     val listaMobs = remember { Mobs.carregar(contexto).sortedBy { it.level } }
 
-    // ---- Ritmo (calibrado nos testes A e B) ----
-    var mobsAtingidos by lembrar(prefs, "mobsAtingidos", ParametrosPower.MOBS_MEDIDO.texto())
-    var intervalo by lembrar(prefs, "intervaloMedido", ParametrosPower.INTERVALO_MEDIDO.texto())
+    // ---- Ritmo (calibrado nos testes A, B e 02/11). Chaves "_v2": os padrões mudaram em 02/11. ----
+    var mobsAtingidos by lembrar(prefs, "mobsAtingidos_v2", ParametrosPower.MOBS_MEDIDO.texto())
+    var intervalo by lembrar(prefs, "intervalo_v2", ParametrosPower.INTERVALO_MEDIDO.texto())
     var golpes by lembrar(prefs, "golpes", ParametrosPower.GOLPES_MEDIDO.toString())
-    var ticksGolpe by lembrar(prefs, "ticksGolpe", ParametrosPower.TICKS_POR_GOLPE_MEDIDO.texto())
+    var ticksGolpe by lembrar(prefs, "ticksGolpe_v2", ParametrosPower.TICKS_POR_GOLPE_MEDIDO.texto())
 
     // ---- Mana ----
     var tipoMana by rememberSaveable { mutableStateOf(prefs.getInt("tipoMana", 0)) }
@@ -119,13 +120,13 @@ fun PainelPocoes(ticks: Double, bonus: Double, fatorCansaco: Double = 1.0) {
     val tv = TiposPocao.VIDA[tipoVida]
     var mobNome by rememberSaveable { mutableStateOf(prefs.getString("mob", null) ?: listaMobs.first().let { "${it.nome}|${it.level}" }) }
     val mob: Mob = listaMobs.firstOrNull { "${it.nome}|${it.level}" == mobNome } ?: listaMobs.first()
-    var vidaPorMin by lembrar(prefs, "vidaPorMin_$mobNome", "")
+    var vidaPorMin by lembrar(prefs, "vidaPorMin_$mobNome", VidaMedida.padrao(mob.nome, mob.level)?.let { kotlin.math.round(it).texto() } ?: "")
     var recuperaVida by lembrar(prefs, "recuperaVida_$tipoVida", tv.recuperaMedia.texto())
     var precoVida by lembrar(prefs, "precoVida_$tipoVida", tv.preco.toString())
 
     LaunchedEffect(mobsAtingidos, intervalo, golpes, ticksGolpe, tipoMana, custo, recupera, preco, cooldown, regen, tipoVida, mobNome, vidaPorMin, recuperaVida, precoVida) {
-        prefs.edit().putString("mobsAtingidos", mobsAtingidos).putString("intervaloMedido", intervalo)
-            .putString("golpes", golpes).putString("ticksGolpe", ticksGolpe)
+        prefs.edit().putString("mobsAtingidos_v2", mobsAtingidos).putString("intervalo_v2", intervalo)
+            .putString("golpes", golpes).putString("ticksGolpe_v2", ticksGolpe)
             .putInt("tipoMana", tipoMana).putString("custo", custo).putString("recupera_$tipoMana", recupera)
             .putString("preco_$tipoMana", preco).putString("cooldown_$tipoMana", cooldown).putString("regen", regen)
             .putInt("tipoVida", tipoVida).putString("mob", mobNome).putString("vidaPorMin_$mobNome", vidaPorMin)
@@ -176,7 +177,7 @@ fun PainelPocoes(ticks: Double, bonus: Double, fatorCansaco: Double = 1.0) {
                 }
                 Text(
                     (if (fatorCansaco > 1) "Tempo inclui as paradas pra trocar de mob cansado. " else "") +
-                    "🔶 Calibrado com os seus testes A e B (stat 98–99, arma de treino, ninjas), supondo bônus total de 2,5× neles. " +
+                    "🔶 Calibrado com os seus testes (stat 98–100, arma de treino, ninjas, estamina verde): ~1 tick por acerto, bônus de 1,5×. " +
                         "Em outros stats, armas e mobs pode mudar.",
                     style = MaterialTheme.typography.bodySmall,
                 )
@@ -194,7 +195,7 @@ fun PainelPocoes(ticks: Double, bonus: Double, fatorCansaco: Double = 1.0) {
             }
             Text(
                 "⚠️ Mobs morrem e o grupo diminui: use a MÉDIA de mobs que cada especial acerta, não quantos você puxou. " +
-                    "Padrões medidos no teste A: 2,5 mobs e 1,45 s.",
+                    "Padrões do teste de 02/11 (contado quadro a quadro): 3,2 mobs e 1,33 s (116 s ÷ 87 especiais, com as pausas).",
                 style = MaterialTheme.typography.bodySmall,
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -203,7 +204,7 @@ fun PainelPocoes(ticks: Double, bonus: Double, fatorCansaco: Double = 1.0) {
             }
             Text(
                 "Econômico (teste B): ~9 golpes; só contam até 9 depois de cada especial (regra do 1 a cada 10). " +
-                    "🔶 Ticks por golpe: 0,5 sem bônus, supondo que o bônus dobra tudo. Se o bônus não valer nos golpes, seria 1.",
+                    "🔶 Ticks por golpe: 0,75 sem bônus (teste B ÷ 1,5). A barra do teste B tem erro de ±2%, então pode ser de 0,5 a 1.",
                 style = MaterialTheme.typography.bodySmall,
             )
 
@@ -239,7 +240,8 @@ fun PainelPocoes(ticks: Double, bonus: Double, fatorCansaco: Double = 1.0) {
             Text(
                 if (perde == null) "Ainda não temos o dano dos mobs. Meça no jogo: anote sua vida, treine 1 minuto nesse mob sem tomar " +
                     "poção de vida (ou conte as que tomou) e veja quanto perdeu. O valor fica salvo pra esse mob."
-                else "Estimativa: muda com sua defesa, armadura e quantos mobs batem em você. " +
+                else (VidaMedida.padrao(mob.nome, mob.level)?.let { "Padrão medido em 02/11: ~${it.toInt()}/min nos Assassin Ninjas (lv 84, defesa alta ~241, 2 a 4 ninjas). " } ?: "") +
+                    "Estimativa: muda com sua defesa, armadura e quantos mobs batem em você. Veja a tela Defesa. " +
                     "🔶 Ainda não sabemos se a poção de vida e a de mana dividem o mesmo cooldown.",
                 style = MaterialTheme.typography.bodySmall,
             )

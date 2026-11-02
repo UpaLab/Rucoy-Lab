@@ -52,7 +52,7 @@ fun TelaProgresso(modifier: Modifier) {
     var mobs by rememberSaveable { mutableStateOf(prefs.getInt("mobs", 4)) }
     var verde by rememberSaveable { mutableStateOf(prefs.getBoolean("verde", false)) }
     var online by rememberSaveable { mutableStateOf(prefs.getBoolean("online", false)) }
-    var bonusTotal by rememberSaveable { mutableStateOf(prefs.getString("bonusTotal", "1") ?: "1") }
+    var bonusTotal by rememberSaveable { mutableStateOf(prefs.getString("bonusTotal_v2", null) ?: Bonus.sugerido(verde, online).texto()) }
     var revezar by rememberSaveable { mutableStateOf(prefs.getBoolean("revezar", false)) }
     var troca by rememberSaveable { mutableStateOf(prefs.getString("troca", "15") ?: "15") }
     var meusTicks by rememberSaveable { mutableStateOf(prefs.getString("meusTicks", "") ?: "") }
@@ -62,7 +62,7 @@ fun TelaProgresso(modifier: Modifier) {
 
     LaunchedEffect(statAtual, statMeta, ritmo, verde, online, bonusTotal, revezar, troca, meusTicks, levelAtual, levelMeta, expHora) {
         prefs.edit().putString("statAtual", statAtual).putString("statMeta", statMeta).putInt("ritmo", ritmo.ordinal)
-            .putBoolean("verde", verde).putBoolean("online", online).putString("bonusTotal", bonusTotal)
+            .putBoolean("verde", verde).putBoolean("online", online).putString("bonusTotal_v2", bonusTotal)
             .putBoolean("revezar", revezar).putString("troca", troca).putString("meusTicks", meusTicks)
             .putString("levelAtual", levelAtual).putString("levelMeta", levelMeta).putString("expHora", expHora).apply()
     }
@@ -80,11 +80,12 @@ fun TelaProgresso(modifier: Modifier) {
         if (ritmo != Ritmo.OFFLINE) {
             Text("Bônus de exp", style = MaterialTheme.typography.labelLarge)
             Chave("Estamina verde (24 h ou mais): +50%", verde) { verde = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
-            Chave("Bônus de treino online (2 h por dia): 2×", online) { online = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
+            Chave("Bônus de treino online (2 h por dia)", online) { online = it; bonusTotal = Bonus.sugerido(verde, online).texto() }
             CampoDecimal("Multiplicador total", bonusTotal, Modifier.fillMaxWidth()) { bonusTotal = it }
             Text(
                 "Oficial (notas 1.21 e 1.25): estamina verde = +50%; treino online = 2× de skill. " +
-                    "🔶 Não sabemos se os dois juntos somam (2,5×) ou multiplicam (3×). O app sugere a soma; você pode mudar.",
+                    "🔶 Mas nos seus testes de power training, com os dois ligados, o total foi ~1,5× (como se só a estamina valesse). " +
+                    "Por isso o app sugere 1,5× com os dois. Você pode mudar.",
                 style = MaterialTheme.typography.bodySmall,
             )
             Chave("Revezar mobs (o mob cansa antes de morrer)", revezar) { revezar = it }

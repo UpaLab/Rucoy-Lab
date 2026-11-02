@@ -3,9 +3,10 @@
 > **Atualização (01/11/2026): os testes A e B confirmaram a hipótese e o modelo está no app** (tela
 > Progresso → Power: Rápido × Econômico). Resultados em `pendencias-teste.md`, seção 5b.
 >
-> Valores calibrados (sem bônus): 2,5 mobs atingidos, 1,45 s entre especiais, **0,77 tick por mob** no especial,
-> 9 golpes entre especiais, **0,42 tick por golpe**, ~1 s por golpe. 🔶 Supondo bônus total de **2,5×** nos testes
-> (estamina verde +50% e treino online 2×, somados; ver `pendencias-teste.md`, seção 5b).
+> **Recalibrado em 02/11/2026** (teste quadro a quadro, `pendencias-teste.md`, seção 5c). Valores sem bônus:
+> 3,2 mobs atingidos, 1,33 s entre especiais, **0,95 tick por mob** no especial, 9 golpes entre especiais,
+> **0,75 tick por golpe**, ~1 s por golpe. 🔶 Supondo bônus total de **1,5×** nos testes (o 2× do treino
+> online não apareceu no power training).
 
 ## A hipótese, em linguagem simples
 

@@ -120,22 +120,49 @@ class FormulasTest {
     private val basica get() = AjusteMana.de(TiposPocao.MANA[0])
     private fun ticksDoPonto(s: Int) = Progressao.ticksDoPonto(s)
 
-    /** Teste A do dono: 100 especiais em ~145 s, 50 poções, de 98 (93%) a 99 (44%), bônus suposto 2,5×. */
+    /** Teste A do dono: 100 especiais em ~145 s, 50 poções, de 98 (93%) a 99 (44%), bônus medido 1,5×. */
     @Test fun reproduzTesteA() {
         val ganhou = 0.07 * ticksDoPonto(98) + 0.44 * ticksDoPonto(99)   // ≈ 479 ticks
-        val p = PowerTraining.plano(Estilo.RAPIDO, ganhou, ParametrosPower(bonus = Bonus.DOS_TESTES_A_B), basica)!!
+        val p = PowerTraining.plano(Estilo.RAPIDO, ganhou, ParametrosPower(bonus = Bonus.NOS_TESTES), basica)!!
         assertEquals(100.0, p.especiais, 6.0)          // ~100 especiais
         assertEquals(145.0, p.horas * 3600, 10.0)      // ~145 s
         assertEquals(50.0, p.pocoes.toDouble(), 5.0)   // ~50 poções
     }
 
-    /** Teste B do dono: ~91 s, ~9,4 especiais, 3 poções + 190 de mana da barra, de 99 (44%) a 99 (58%), bônus suposto 2,5×. */
+    /** Teste B do dono: ~91 s, ~9,4 especiais, 3 poções + 190 de mana da barra, de 99 (44%) a 99 (58%), bônus medido 1,5×. */
     @Test fun reproduzTesteB() {
         val ganhou = 0.14 * ticksDoPonto(99)                              // ≈ 132 ticks
-        val p = PowerTraining.plano(Estilo.ECONOMICO, ganhou, ParametrosPower(bonus = Bonus.DOS_TESTES_A_B), basica)!!
+        val p = PowerTraining.plano(Estilo.ECONOMICO, ganhou, ParametrosPower(bonus = Bonus.NOS_TESTES), basica)!!
         assertEquals(9.4, p.especiais, 1.0)
         assertEquals(91.0, p.horas * 3600, 10.0)
         assertEquals(470.0, p.manaTotal, 50.0)
+    }
+
+    /**
+     * Teste de 02/11 (quadro a quadro): 99 (59%) → 100 (1%) em 116 s, ~87 especiais, ~276 acertos,
+     * 415 de mana da barra + 37 poções básicas ≈ 4.350 de mana. Estamina verde + bônus online.
+     */
+    @Test fun reproduzTesteQuadroAQuadro() {
+        val ganhou = 0.41 * ticksDoPonto(99) + 0.01 * ticksDoPonto(100)   // ≈ 396 ticks
+        assertEquals(1.43, ganhou / 276, 0.02)                             // ~1,4 tick por acerto
+        val p = PowerTraining.plano(Estilo.RAPIDO, ganhou, ParametrosPower(bonus = Bonus.NOS_TESTES), basica)!!
+        assertEquals(87.0, p.especiais, 5.0)
+        assertEquals(116.0, p.horas * 3600, 8.0)
+        assertEquals(4350.0, p.manaTotal, 250.0)
+    }
+
+    @Test fun vidaNosNinjas() {
+        assertEquals(905.0, VidaMedida.ASSASSIN_NINJA_02_11, 1.0)          // 7 × 250 em 116 s
+        assertEquals(VidaMedida.ASSASSIN_NINJA_02_11, VidaMedida.padrao("Assassin Ninja", 55)!!, d)
+        assertEquals(null, VidaMedida.padrao("Assassin", 50))
+        // Vida que caiu também conta: 1 poção de 100 + 200 de vida perdida em 60 s = 300/min.
+        assertEquals(300.0, VidaMedida.porMinuto(60.0, 1, 100.0, 1000.0, 800.0), d)
+    }
+
+    @Test fun defesaDoSetDoTeste() {
+        val a = Combate.Armadura(defesa = 92.0, escudo = 28.0, outras = 77.0)
+        assertEquals(241.52, Combate.defesaAlta(84.0, a), 0.01)
+        assertEquals(159.26, Combate.defesaBaixa(84.0, a), 0.01)
     }
 
     @Test fun economicoGastaMenosPocaoERapidoEMaisRapido() {
@@ -242,8 +269,8 @@ class FormulasTest {
     @Test fun bonusOficiais() {
         assertEquals(1.0, Bonus.sugerido(false, false), d)
         assertEquals(1.5, Bonus.sugerido(true, false), d)   // estamina verde: +50% (oficial 1.21)
-        assertEquals(2.0, Bonus.sugerido(false, true), d)   // treino online: 2× (oficial 1.25)
-        assertEquals(2.5, Bonus.sugerido(true, true), d)    // 🔶 soma suposta
+        assertEquals(1.0, Bonus.sugerido(false, true), d)   // 🔶 treino online: sem efeito visível no power (teste 02/11)
+        assertEquals(1.5, Bonus.sugerido(true, true), d)    // 🔶 o que os testes mostraram com os dois ligados
     }
 
     @Test fun cansacoDoMob() {
