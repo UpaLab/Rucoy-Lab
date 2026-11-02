@@ -38,6 +38,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import android.content.Context
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +59,9 @@ enum class Ferramenta(val rotulo: String) {
     ONDE_TREINAR("Onde treinar"), PROGRESSO("Progresso"), POCOES("Poções"), DEFESA("Defesa"), MOBS("Mobs"),
 }
 
+/** Altura da parte que abre embaixo dos menus, em fração da altura da tela. */
+enum class Tamanho(val rotulo: String, val fracao: Float) { P("P", 0.30f), M("M", 0.42f), G("G", 0.60f) }
+
 @Composable
 fun ConteudoBalao(
     mover: (Float, Float) -> Unit, abrirOuFechar: (Boolean) -> Unit, encerrar: () -> Unit,
@@ -66,6 +71,8 @@ fun ConteudoBalao(
     MaterialTheme(colorScheme = cores) {
         var aberto by rememberSaveable { mutableStateOf(abertoNoInicio) }
         var escolhida by rememberSaveable { mutableStateOf(ferramentaNoInicio) }
+        val prefs = LocalContext.current.let { c -> remember { c.getSharedPreferences("balao", Context.MODE_PRIVATE) } }
+        var tamanho by remember { mutableStateOf(Tamanho.entries.getOrElse(prefs.getInt("tamanho", 1)) { Tamanho.M }) }
         LaunchedEffect(aberto) { abrirOuFechar(aberto) }
 
         val arrastar = Modifier.pointerInput(Unit) {
@@ -84,8 +91,8 @@ fun ConteudoBalao(
             return@MaterialTheme
         }
 
-        // Altura do "dropdown": ~55% da tela, com rolagem própria.
-        val altura = with(LocalDensity.current) { (LocalContext.current.resources.displayMetrics.heightPixels * 0.55f).toDp() }
+        // Altura do "dropdown" (P, M ou G), com rolagem própria.
+        val altura = with(LocalDensity.current) { (LocalContext.current.resources.displayMetrics.heightPixels * tamanho.fracao).toDp() }
         Card(
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -98,6 +105,10 @@ fun ConteudoBalao(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text("UpaLab", Modifier.weight(1f), fontWeight = FontWeight.Bold)
+                    TextButton(onClick = {
+                        tamanho = Tamanho.entries[(tamanho.ordinal + 1) % Tamanho.entries.size]
+                        prefs.edit().putInt("tamanho", tamanho.ordinal).apply()
+                    }) { Text("Tamanho ${tamanho.rotulo}") }
                     TextButton(onClick = { aberto = false }) { Text("Minimizar") }
                     TextButton(onClick = encerrar) { Text("✕") }
                 }

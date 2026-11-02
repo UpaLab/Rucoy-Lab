@@ -83,14 +83,17 @@ class BalaoComoServicoTest {
         val campo = io.github.upalab.rucoylab.balao.ServicoBalao::class.java.getDeclaredField("vista").apply { isAccessible = true }
         val raiz = campo.get(controle.get()) as? androidx.compose.ui.platform.ComposeView ?: error("o balão não apareceu")
         controle.get().mostrar(abertoNoInicio = true, ferramenta = f)
-        org.robolectric.shadows.ShadowLooper.idleMainLooper()
-        raiz.measure(
-            android.view.View.MeasureSpec.makeMeasureSpec(1000, android.view.View.MeasureSpec.AT_MOST),
-            android.view.View.MeasureSpec.makeMeasureSpec(2000, android.view.View.MeasureSpec.AT_MOST),
-        )
-        raiz.layout(0, 0, raiz.measuredWidth, raiz.measuredHeight)
+        // Deixa passar alguns quadros de tela pra o Compose montar o painel.
+        repeat(10) {
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(50))
+            raiz.measure(
+                android.view.View.MeasureSpec.makeMeasureSpec(1000, android.view.View.MeasureSpec.AT_MOST),
+                android.view.View.MeasureSpec.makeMeasureSpec(2000, android.view.View.MeasureSpec.AT_MOST),
+            )
+            raiz.layout(0, 0, raiz.measuredWidth, raiz.measuredHeight)
+        }
         check(raiz.isAttachedToWindow && raiz.childCount > 0) { "a janela do balão não montou" }
-        check(raiz.measuredHeight > 300) { "o painel não abriu (altura ${raiz.measuredHeight})" }
+        check(raiz.measuredHeight > 150) { "o painel não abriu (altura ${raiz.measuredHeight})" }
         org.robolectric.shadows.ShadowLooper.idleMainLooper()
         controle.destroy()
     }

@@ -29,8 +29,8 @@ Um app Android **leve**, em português, que faz os cálculos de treino **sem pre
 - É uma bolinha ("UP") que fica **por cima do jogo**. Dá pra arrastar pra qualquer canto.
 - **Tocou na bolinha:** abre um painel quase da largura da tela, com os menus numa faixa que **rola para o
   lado** (Onde treinar, Progresso, Poções, Defesa, Mobs).
-- **Tocou num menu:** a ferramenta abre **logo abaixo dos menus**, estilo dropdown, com ~55% da altura da
-  tela e rolagem própria. Tocar no mesmo menu de novo fecha. "Minimizar" volta pra bolinha; "✕" tira o balão.
+- **Tocou num menu:** a ferramenta abre **logo abaixo dos menus**, estilo dropdown, com rolagem própria. O botão
+  **"Tamanho"** troca a altura: P (~30% da tela), M (~42%, padrão) ou G (~60%); fica salvo. Tocar no mesmo menu de novo fecha. "Minimizar" volta pra bolinha; "✕" tira o balão.
 - Os valores digitados são os mesmos das telas do app (ficam salvos nos dois lugares).
 - Com o painel aberto, toques **fora dele** continuam indo pro jogo.
 - Precisa da permissão **"aparecer sobre outros apps"**. O app só pede essa permissão quando você ativa o
