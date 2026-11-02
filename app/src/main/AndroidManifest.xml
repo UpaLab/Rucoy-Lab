@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Fase 1 (esqueleto): NENHUMA permissão. O balão flutuante vai pedir
-     "aparecer sobre outros apps" só quando o jogador ativar. -->
+<!-- Permissões só do balão flutuante. "Sobrepor a outros apps" o próprio jogador ativa nas
+     configurações do Android; sem ela o balão não abre. Nada de internet nem de ler a tela. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,5 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".balao.ServicoBalao"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Calculadora flutuante (balão) por cima de outros apps, aberta pelo usuário" />
+        </service>
     </application>
 </manifest>

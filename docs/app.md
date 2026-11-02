@@ -26,7 +26,13 @@ Um app Android **leve**, em português, que faz os cálculos de treino **sem pre
 
 ## 3. Balão flutuante
 
-- É uma bolinha que fica **por cima do jogo**. Quando você toca nela, abre uma calculadora rápida.
+- É uma bolinha ("UP") que fica **por cima do jogo**. Dá pra arrastar pra qualquer canto.
+- **Tocou na bolinha:** abre um painel quase da largura da tela, com os menus numa faixa que **rola para o
+  lado** (Onde treinar, Progresso, Poções, Defesa, Mobs).
+- **Tocou num menu:** a ferramenta abre **logo abaixo dos menus**, estilo dropdown, com ~55% da altura da
+  tela e rolagem própria. Tocar no mesmo menu de novo fecha. "Minimizar" volta pra bolinha; "✕" tira o balão.
+- Os valores digitados são os mesmos das telas do app (ficam salvos nos dois lugares).
+- Com o painel aberto, toques **fora dele** continuam indo pro jogo.
 - Precisa da permissão **"aparecer sobre outros apps"**. O app só pede essa permissão quando você ativa o
   balão. Se você não ativar, ele nem pede.
 - O balão **não lê a tela, não toca e não clica no jogo**. Você digita os números e ele calcula. Isso é
